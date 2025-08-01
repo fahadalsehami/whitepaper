@@ -128,11 +128,8 @@ export default function Subchapter2_1() {
   useEffect(() => {
     if (isActive) {
       setDarkMode(false);
-      console.log('🎯 Subchapter2_1 - Now ACTIVE! Setting light theme.');
-    } else {
-      console.log('❌ Subchapter2_1 - Not active. Current:', currentSubchapter);
     }
-  }, [isActive, setDarkMode, currentSubchapter]);
+  }, [isActive, setDarkMode]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -341,9 +338,8 @@ export default function Subchapter2_1() {
     color: isOurSystem ? '#059669' : '#6b7280', // Green for our system, gray for others (light theme colors)
   });
 
-  // Debug: Always render to check if scroll detection is working
-  console.log('🔍 Subchapter2_1 - Rendering. isActive:', isActive, 'currentSubchapter:', currentSubchapter);
-  // if (!isActive) return null;
+  // Always render but control visibility and opacity
+  console.log('🔍 Subchapter2_1 - isActive:', isActive, 'currentSubchapter:', currentSubchapter);
 
   return (
     <>
@@ -360,9 +356,9 @@ export default function Subchapter2_1() {
       
       <section id="quality-1" ref={sectionRef} style={{
         ...sectionStyle,
-        // Debug: Add visual indicators
-        border: isActive ? '3px solid green' : '3px solid red',
-        opacity: isActive ? 1 : 0.3
+        // Debug: Always visible with clear content when active
+        opacity: 1, // Always full opacity for clear content
+        border: isActive ? '2px solid green' : '2px solid orange' // Debug indicator
       }}>
         <div style={contentStyle}>
           <h1 style={headlineStyle}>Quality & Monitoring</h1>
