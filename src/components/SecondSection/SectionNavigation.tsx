@@ -24,12 +24,24 @@ export default function SectionNavigation({ scrollToSection }: SectionNavigation
           const isActive = currentChapter === chapter.number;
           let displayNumber = String(chapter.number);
           let displayId = chapter.id;
+          
+          // Debug logging
+          console.log('🔍 Navigation - Chapter:', chapter.number, 'isActive:', isActive, 'currentSubchapter:', currentSubchapter);
+          
           if (isActive && currentSubchapter) {
             const activeSub = chapter.subchapters?.find(s => s.fullNumber === currentSubchapter);
             if (activeSub) {
               displayNumber = activeSub.fullNumber;
               displayId = activeSub.id;
+              console.log('✅ Navigation - Using subchapter:', displayNumber);
             }
+          }
+          
+          // Special case: if we're in chapter 2 but no subchapter detected, default to 2.1
+          if (isActive && chapter.number === 2 && !currentSubchapter) {
+            displayNumber = "2.1";
+            displayId = "quality-1";
+            console.log('🔧 Navigation - Forcing 2.1 display for chapter 2');
           }
           // Sizing
           const size = 90;
