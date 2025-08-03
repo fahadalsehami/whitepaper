@@ -9,6 +9,7 @@ import Chapter1 from './SecondSection/Chapter1/Chapter1';
 import Chapter2 from './SecondSection/Chapter2/Chapter2';
 import Chapter3 from './SecondSection/Chapter3/Chapter3';
 import Chapter4 from './SecondSection/Chapter4/Chapter4';
+import Chapter5 from './SecondSection/Chapter5/Chapter5';
 import { ScrollProvider } from '../context/ScrollContext';
 
 function SecondSectionContent() {
@@ -40,6 +41,7 @@ function SecondSectionContent() {
         <Chapter2 />
         <Chapter3 />
         <Chapter4 />
+        <Chapter5 />
       </div>
     </div>
   );

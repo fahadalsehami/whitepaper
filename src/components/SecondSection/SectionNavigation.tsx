@@ -51,6 +51,13 @@ export default function SectionNavigation({ scrollToSection }: SectionNavigation
             displayId = "summary-1";
             console.log('🔧 Navigation - Forcing 4.1 display for chapter 4');
           }
+          
+          // Special case: if we're in chapter 5 but no subchapter detected, default to 5.1
+          if (isActive && chapter.number === 5 && !currentSubchapter) {
+            displayNumber = "5.1";
+            displayId = "conclusions-1";
+            console.log('🔧 Navigation - Forcing 5.1 display for chapter 5');
+          }
           // Sizing
           const size = 90;
           const opacity = isActive ? 1 : 0.15;

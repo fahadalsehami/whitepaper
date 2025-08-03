@@ -66,6 +66,15 @@ const chapters: Chapter[] = [
     subchapters: [
       { id: 'summary-1', number: 1, title: 'Benchmark Performance Analysis', fullNumber: '4.1' },
     ]
+  },
+  {
+    id: 'chapter-5',
+    number: 5,
+    title: 'CONCLUSIONS',
+    subchapters: [
+      { id: 'conclusions-1', number: 1, title: 'Conclusions', fullNumber: '5.1' },
+      { id: 'conclusions-2', number: 2, title: 'Final Scientific Statement', fullNumber: '5.2' },
+    ]
   }
 ];
 
