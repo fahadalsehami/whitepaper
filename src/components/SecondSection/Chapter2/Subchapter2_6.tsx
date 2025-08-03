@@ -6,179 +6,202 @@ import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SUPPORT_TEXT = "Physiology domain assessment utilizes advanced biomarker extraction techniques to quantify autonomic nervous system responses and physiological stress indicators through non-invasive voice and behavioral analysis, providing objective measures of internal physiological states.";
+const SUPPORT_TEXT = "Self-Report domain assessment employs advanced natural language processing and sentiment analysis to extract meaningful insights from patient narratives, emotional expressions, and subjective experiences, providing comprehensive understanding of patient-reported symptoms and functional impairments.";
 
-// Physiology domain content with 5 key points and SVG icons
+// Self-Report domain content with 5 key points and SVG icons
 // Note: Each cube has 6 surfaces, but we show 5 content points
 // The 6th surface can represent the "foundation" or "integration" face
-const PHYSIOLOGY_POINTS = [
+const SELF_REPORT_POINTS = [
   {
-    title: "Voice Biomarkers",
-    content: "Advanced spectral analysis including fundamental frequency variations, jitter, shimmer, and harmonics-to-noise ratio for physiological state assessment",
+    title: "Symptom Narrative Analysis",
+    content: "Natural language processing of patient descriptions with clinical context understanding",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
           <style>{`
-            @keyframes voicePulse {
-              0% { transform: scale(1); opacity: 0.8; }
-              50% { transform: scale(1.1); opacity: 1; }
-              100% { transform: scale(1); opacity: 0.8; }
-            }
-            @keyframes waveform {
-              0% { transform: scaleY(0.3); }
-              50% { transform: scaleY(1); }
-              100% { transform: scaleY(0.3); }
-            }
-            .voice-pulse { animation: voicePulse 2s ease-in-out infinite; }
-            .wave-1 { animation: waveform 1.5s ease-in-out infinite; }
-            .wave-2 { animation: waveform 1.5s ease-in-out infinite 0.2s; }
-            .wave-3 { animation: waveform 1.5s ease-in-out infinite 0.4s; }
-            .wave-4 { animation: waveform 1.5s ease-in-out infinite 0.6s; }
-          `}</style>
-        </defs>
-        <circle className="voice-pulse" cx="24" cy="24" r="16" stroke="#000" strokeWidth="2" fill="none"/>
-        <circle cx="24" cy="24" r="6" fill="#000"/>
-        <g transform="translate(8, 20)">
-          <rect className="wave-1" x="28" y="0" width="2" height="8" fill="#000"/>
-          <rect className="wave-2" x="32" y="-2" width="2" height="12" fill="#000"/>
-          <rect className="wave-3" x="36" y="1" width="2" height="6" fill="#000"/>
-          <rect className="wave-4" x="40" y="-1" width="2" height="10" fill="#000"/>
-        </g>
-      </svg>
-    )
-  },
-  {
-    title: "Autonomic Indicators", 
-    content: "Heart rate variability extraction from audio signals using advanced signal processing and machine learning algorithms",
-    icon: (
-      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
-        <defs>
-          <style>{`
-            @keyframes heartbeat {
-              0% { transform: scale(1); }
-              25% { transform: scale(1.1); }
-              50% { transform: scale(1); }
-              75% { transform: scale(1.05); }
-              100% { transform: scale(1); }
-            }
-            @keyframes hrvFlow {
-              0% { stroke-dashoffset: 20; }
-              100% { stroke-dashoffset: 0; }
-            }
-            .heart-pulse { animation: heartbeat 1.2s ease-in-out infinite; }
-            .hrv-line { 
-              stroke-dasharray: 4 2;
-              animation: hrvFlow 2s linear infinite;
-            }
-          `}</style>
-        </defs>
-        <path className="heart-pulse" d="M24 36L12 24C8 20 8 12 16 12C20 12 24 16 24 16S28 12 32 12C40 12 40 20 36 24L24 36Z" fill="#000"/>
-        <path className="hrv-line" d="M8 8h8l2-4 2 8 2-6 2 4h8" stroke="#000" strokeWidth="2" fill="none"/>
-        <circle cx="10" cy="40" r="1" fill="#000">
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="38" cy="40" r="1" fill="#000">
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
-    )
-  },
-  {
-    title: "Stress Markers",
-    content: "Cortisol level correlation through vocal pattern analysis and prosodic feature extraction",
-    icon: (
-      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
-        <defs>
-          <style>{`
-            @keyframes stressLevel {
-              0% { transform: scale(1) rotate(0deg); }
-              50% { transform: scale(1.05) rotate(2deg); }
-              100% { transform: scale(1) rotate(0deg); }
-            }
-            @keyframes cortisol {
-              0% { cy: 36; opacity: 0.5; }
-              50% { cy: 24; opacity: 1; }
-              100% { cy: 12; opacity: 0.5; }
-            }
-            .stress-indicator { animation: stressLevel 2s ease-in-out infinite; }
-            .cortisol-level { animation: cortisol 3s ease-in-out infinite; }
-          `}</style>
-        </defs>
-        <rect className="stress-indicator" x="8" y="8" width="32" height="32" stroke="#000" strokeWidth="2" fill="none" rx="4"/>
-        <path d="M16 20h16M16 24h16M16 28h12" stroke="#000" strokeWidth="1.5"/>
-        <circle className="cortisol-level" cx="36" cy="36" r="2" fill="#000"/>
-        <path d="M12 12L36 36" stroke="#000" strokeWidth="1" strokeDasharray="2,2"/>
-        <rect x="20" y="32" width="8" height="4" fill="#000" rx="2"/>
-      </svg>
-    )
-  },
-  {
-    title: "Sleep Pattern Analysis",
-    content: "Circadian rhythm disruption indicators derived from speech patterns and vocal energy distribution",
-    icon: (
-      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
-        <defs>
-          <style>{`
-            @keyframes sleepCycle {
-              0% { opacity: 0.3; }
-              25% { opacity: 1; }
-              50% { opacity: 0.6; }
-              75% { opacity: 1; }
-              100% { opacity: 0.3; }
-            }
-            @keyframes circadian {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-            .sleep-wave { animation: sleepCycle 4s ease-in-out infinite; }
-            .circadian-ring { animation: circadian 8s linear infinite; }
-          `}</style>
-        </defs>
-        <circle className="circadian-ring" cx="24" cy="24" r="18" stroke="#000" strokeWidth="2" fill="none" strokeDasharray="8 4"/>
-        <path className="sleep-wave" d="M8 24Q16 16 24 24Q32 32 40 24" stroke="#000" strokeWidth="2" fill="none"/>
-        <circle cx="24" cy="24" r="6" fill="#000"/>
-        <path d="M20 20L28 28M28 20L20 28" stroke="#fff" strokeWidth="1"/>
-        <circle cx="12" cy="12" r="2" fill="#000" opacity="0.7"/>
-        <circle cx="36" cy="36" r="2" fill="#000" opacity="0.7"/>
-      </svg>
-    )
-  },
-  {
-    title: "Physiological Stress Detection",
-    content: "Real-time autonomic nervous system response monitoring through multi-modal biomarker fusion",
-    icon: (
-      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
-        <defs>
-          <style>{`
-            @keyframes autonomicPulse {
-              0% { transform: scale(1); opacity: 0.7; }
-              50% { transform: scale(1.15); opacity: 1; }
-              100% { transform: scale(1); opacity: 0.7; }
-            }
-            @keyframes biomarkerFlow {
-              0% { strokeDashoffset: 30; }
+            @keyframes narrativeFlow {
+              0% { strokeDashoffset: 20; }
               100% { strokeDashoffset: 0; }
             }
-            .autonomic-center { animation: autonomicPulse 1.8s ease-in-out infinite; }
-            .biomarker-flow { 
-              stroke-dasharray: 6 3;
-              animation: biomarkerFlow 2.5s linear infinite;
+            @keyframes textAnalysis {
+              0% { opacity: 0.5; transform: scale(0.9); }
+              50% { opacity: 1; transform: scale(1.1); }
+              100% { opacity: 0.5; transform: scale(0.9); }
+            }
+            .narrative-line { 
+              stroke-dasharray: 4 2;
+              animation: narrativeFlow 2.5s linear infinite;
+            }
+            .text-processor { animation: textAnalysis 3s ease-in-out infinite; }
+          `}</style>
+        </defs>
+        <rect x="8" y="8" width="32" height="28" rx="3" stroke="#000" strokeWidth="2" fill="none"/>
+        <path className="narrative-line" d="M12 16h24M12 20h20M12 24h22M12 28h18" stroke="#000" strokeWidth="1"/>
+        <circle className="text-processor" cx="24" cy="40" r="4" fill="#000"/>
+        <path d="M20 40L12 32M28 40L36 32" stroke="#000" strokeWidth="1.5"/>
+        <circle cx="12" cy="12" r="1" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="36" cy="12" r="1" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/>
+        </circle>
+        <path d="M16 6Q20 4 24 6Q28 4 32 6" stroke="#000" strokeWidth="1" fill="none"/>
+      </svg>
+    )
+  },
+  {
+    title: "Emotional Vocabulary Assessment", 
+    content: "Sentiment complexity analysis and emotional granularity measurement using advanced NLP",
+    icon: (
+      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <style>{`
+            @keyframes emotionalSpectrum {
+              0% { stroke: "#000"; opacity: 0.3; }
+              25% { stroke: "#000"; opacity: 0.7; }
+              50% { stroke: "#000"; opacity: 1; }
+              75% { stroke: "#000"; opacity: 0.7; }
+              100% { stroke: "#000"; opacity: 0.3; }
+            }
+            @keyframes sentimentPulse {
+              0% { transform: scale(1); }
+              50% { transform: scale(1.1); }
+              100% { transform: scale(1); }
+            }
+            .emotion-wave { animation: emotionalSpectrum 4s ease-in-out infinite; }
+            .sentiment-core { animation: sentimentPulse 2.5s ease-in-out infinite; }
+          `}</style>
+        </defs>
+        <circle className="sentiment-core" cx="24" cy="24" r="8" stroke="#000" strokeWidth="2" fill="none"/>
+        <path className="emotion-wave" d="M8 24Q16 16 24 24Q32 32 40 24" strokeWidth="2" fill="none"/>
+        <path className="emotion-wave" d="M8 28Q16 20 24 28Q32 36 40 28" strokeWidth="1.5" fill="none"/>
+        <path className="emotion-wave" d="M8 20Q16 12 24 20Q32 28 40 20" strokeWidth="1.5" fill="none"/>
+        <circle cx="24" cy="24" r="3" fill="#000"/>
+        <path d="M20 20L28 28M28 20L20 28" stroke="#fff" strokeWidth="1"/>
+        <circle cx="12" cy="12" r="1.5" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="36" cy="36" r="1.5" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2.3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    )
+  },
+  {
+    title: "Cognitive Pattern Recognition",
+    content: "Thought organization assessment, coherence analysis, and cognitive load estimation",
+    icon: (
+      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <style>{`
+            @keyframes cognitiveNetwork {
+              0% { strokeDashoffset: 15; }
+              100% { strokeDashoffset: 0; }
+            }
+            @keyframes thoughtProcess {
+              0% { transform: rotate(0deg); opacity: 0.6; }
+              50% { transform: rotate(180deg); opacity: 1; }
+              100% { transform: rotate(360deg); opacity: 0.6; }
+            }
+            .neural-connection { 
+              stroke-dasharray: 3 2;
+              animation: cognitiveNetwork 2s linear infinite;
+            }
+            .thought-node { animation: thoughtProcess 4s ease-in-out infinite; }
+          `}</style>
+        </defs>
+        <circle cx="24" cy="12" r="3" fill="#000"/>
+        <circle cx="12" cy="24" r="3" fill="#000"/>
+        <circle cx="36" cy="24" r="3" fill="#000"/>
+        <circle cx="18" cy="36" r="3" fill="#000"/>
+        <circle cx="30" cy="36" r="3" fill="#000"/>
+        <path className="neural-connection" d="M24 15L21 21M24 15L27 21" stroke="#000" strokeWidth="1.5"/>
+        <path className="neural-connection" d="M15 24L21 33M33 24L27 33" stroke="#000" strokeWidth="1.5"/>
+        <path className="neural-connection" d="M12 27L15 33M36 27L33 33" stroke="#000" strokeWidth="1.5"/>
+        <rect className="thought-node" x="20" y="20" width="8" height="8" stroke="#000" strokeWidth="2" fill="none" rx="2"/>
+        <circle cx="24" cy="24" r="2" fill="#000"/>
+        <path d="M8 8L16 16M40 8L32 16M8 40L16 32M40 40L32 32" stroke="#000" strokeWidth="1" strokeDasharray="2 1"/>
+      </svg>
+    )
+  },
+  {
+    title: "Subjective Experience Mapping",
+    content: "Multi-dimensional pain scales, mood rating integration, and functional impairment assessment",
+    icon: (
+      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <style>{`
+            @keyframes experienceMapping {
+              0% { transform: scale(1) rotate(0deg); }
+              25% { transform: scale(1.05) rotate(90deg); }
+              50% { transform: scale(1) rotate(180deg); }
+              75% { transform: scale(1.05) rotate(270deg); }
+              100% { transform: scale(1) rotate(360deg); }
+            }
+            @keyframes dimensionalScale {
+              0% { strokeDashoffset: 12; }
+              100% { strokeDashoffset: 0; }
+            }
+            .experience-center { animation: experienceMapping 6s ease-in-out infinite; }
+            .scale-indicator { 
+              stroke-dasharray: 3 1;
+              animation: dimensionalScale 1.8s linear infinite;
             }
           `}</style>
         </defs>
-        <rect x="4" y="4" width="40" height="40" stroke="#000" strokeWidth="2" fill="none" rx="6"/>
-        <circle className="autonomic-center" cx="24" cy="24" r="8" fill="#000"/>
-        <path className="biomarker-flow" d="M8 16L16 8M32 8L40 16M40 32L32 40M16 40L8 32" stroke="#000" strokeWidth="2"/>
-        <circle cx="12" cy="12" r="1.5" fill="#000">
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="36" cy="12" r="1.5" fill="#000">
+        <circle className="experience-center" cx="24" cy="24" r="10" stroke="#000" strokeWidth="2" fill="none"/>
+        <rect x="20" y="20" width="8" height="8" fill="#000"/>
+        <path className="scale-indicator" d="M24 4v8M4 24h8M24 36v8M36 24h8" stroke="#000" strokeWidth="2"/>
+        <path className="scale-indicator" d="M12 12L18 18M36 12L30 18M36 36L30 30M12 36L18 30" stroke="#000" strokeWidth="1.5"/>
+        <circle cx="24" cy="8" r="2" fill="#000"/>
+        <circle cx="8" cy="24" r="2" fill="#000"/>
+        <circle cx="24" cy="40" r="2" fill="#000"/>
+        <circle cx="40" cy="24" r="2" fill="#000"/>
+        <circle cx="16" cy="16" r="1" fill="#000">
           <animate attributeName="opacity" values="0.3;1;0.3" dur="1.7s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="36" cy="36" r="1.5" fill="#000">
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.3s" repeatCount="indefinite"/>
+        <circle cx="32" cy="32" r="1" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="12" cy="36" r="1.5" fill="#000">
+      </svg>
+    )
+  },
+  {
+    title: "Patient-Reported Outcome Integration",
+    content: "Standardized questionnaire processing with intelligent response validation",
+    icon: (
+      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+        <defs>
+          <style>{`
+            @keyframes validationProcess {
+              0% { transform: translateY(0px); opacity: 0.5; }
+              50% { transform: translateY(-3px); opacity: 1; }
+              100% { transform: translateY(0px); opacity: 0.5; }
+            }
+            @keyframes dataIntegration {
+              0% { strokeDashoffset: 18; }
+              100% { strokeDashoffset: 0; }
+            }
+            .validation-check { animation: validationProcess 2.2s ease-in-out infinite; }
+            .integration-flow { 
+              stroke-dasharray: 4 2;
+              animation: dataIntegration 2.5s linear infinite;
+            }
+          `}</style>
+        </defs>
+        <rect x="8" y="8" width="20" height="28" rx="2" stroke="#000" strokeWidth="2" fill="none"/>
+        <rect x="20" y="18" width="20" height="20" rx="2" stroke="#000" strokeWidth="2" fill="none"/>
+        <path d="M12 16h12M12 20h10M12 24h8M12 28h6" stroke="#000" strokeWidth="1"/>
+        <path d="M24 26h12M24 30h10M24 34h8" stroke="#000" strokeWidth="1"/>
+        <circle className="validation-check" cx="16" cy="32" r="2" fill="#000"/>
+        <circle className="validation-check" cx="32" cy="22" r="2" fill="#000"/>
+        <path className="integration-flow" d="M28 18L20 26" stroke="#000" strokeWidth="2"/>
+        <path d="M14 14L18 18M18 14L14 18" stroke="#000" strokeWidth="1"/>
+        <path d="M30 30L34 34M34 30L30 34" stroke="#000" strokeWidth="1"/>
+        <circle cx="40" cy="8" r="1" fill="#000">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="8" cy="40" r="1" fill="#000">
           <animate attributeName="opacity" values="0.3;1;0.3" dur="1.9s" repeatCount="indefinite"/>
         </circle>
       </svg>
@@ -186,14 +209,14 @@ const PHYSIOLOGY_POINTS = [
   }
 ];
 
-export default function Subchapter2_4() {
+export default function Subchapter2_6() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cubeRef = useRef<HTMLDivElement>(null);
   const { currentSubchapter } = useScroll();
   const { setDarkMode } = useHeroDarkMode();
   
-  // Only show content when we transition to subchapter 2.4
-  const isActive = currentSubchapter === '2.4';
+  // Only show content when we transition to subchapter 2.6
+  const isActive = currentSubchapter === '2.6';
 
   // Set light theme when this subchapter is active
   useEffect(() => {
@@ -241,27 +264,27 @@ export default function Subchapter2_4() {
 
   // Calculate which cards should be visible based on scroll progress
   const getVisibleCards = () => {
-    const totalCards = PHYSIOLOGY_POINTS.length;
+    const totalCards = SELF_REPORT_POINTS.length;
     const cardsVisible = Math.floor(scrollProgress * (totalCards + 1));
     return Math.min(cardsVisible, totalCards);
   };
 
   // Calculate which card is being revealed and dice roll state
   const getCurrentCardIndex = () => {
-    const totalCards = PHYSIOLOGY_POINTS.length;
+    const totalCards = SELF_REPORT_POINTS.length;
     return Math.floor(scrollProgress * totalCards);
   };
 
   const isDiceRolling = () => {
     const cardIndex = getCurrentCardIndex();
-    const cardProgress = (scrollProgress * PHYSIOLOGY_POINTS.length) - cardIndex;
+    const cardProgress = (scrollProgress * SELF_REPORT_POINTS.length) - cardIndex;
     // Rolling phase: first 30% of each card's scroll progress
     return cardProgress < 0.3;
   };
 
   // Separate Left Cube Component
   const LeftCube = ({ progress }: { progress: number }) => {
-    const totalProgress = progress * PHYSIOLOGY_POINTS.length;
+    const totalProgress = progress * SELF_REPORT_POINTS.length;
     const leftCubePhase = Math.min(1, totalProgress * 2); // First 50% of animation
     
     // Start off-screen left with very small size
@@ -291,7 +314,7 @@ export default function Subchapter2_4() {
   
   // Separate Right Cube Component  
   const RightCube = ({ progress }: { progress: number }) => {
-    const totalProgress = progress * PHYSIOLOGY_POINTS.length;
+    const totalProgress = progress * SELF_REPORT_POINTS.length;
     const rightCubePhase = Math.max(0, Math.min(1, (totalProgress - 1) * 2)); // Starts after left cube completes
     
     // Start off-screen right with very small size
@@ -321,14 +344,14 @@ export default function Subchapter2_4() {
 
   // Card component that extends from cube surfaces after dice stop rolling
   const ExtendedCard = ({ point, index, isVisible, progress }: { 
-    point: typeof PHYSIOLOGY_POINTS[0], 
+    point: typeof SELF_REPORT_POINTS[0], 
     index: number, 
     isVisible: boolean, 
     progress: number 
   }) => {
     const currentCardIndex = getCurrentCardIndex();
     const isCurrentCard = index === currentCardIndex;
-    const cardProgress = (scrollProgress * PHYSIOLOGY_POINTS.length) - currentCardIndex;
+    const cardProgress = (scrollProgress * SELF_REPORT_POINTS.length) - currentCardIndex;
     
     // Only show card after dice stops rolling (after 30% of scroll progress)
     const showCard = isCurrentCard && cardProgress > 0.3;
@@ -347,9 +370,9 @@ export default function Subchapter2_4() {
       <div style={{
         position: 'absolute',
         top: cardPosition.top, // Same position for all cards
-        left: cardPosition.left, // Moved toward left near center
-        width: isMobile ? 320 : 480, // Increased width size
-        minWidth: isMobile ? 320 : 480, // Increased min-width
+        left: cardPosition.left, // Positioned after red line toward right
+        width: isMobile ? 280 : 400, // Match subchapter 2.2 width
+        minWidth: isMobile ? 280 : 400, // Match subchapter 2.2 min-width
         background: '#f7f7f7', // Light gray background like subchapter 2.2
         border: 'none',
         borderRadius: 0, // No rounded corners
@@ -494,7 +517,7 @@ export default function Subchapter2_4() {
         }
       `}</style>
       
-      <section id="quality-4" ref={sectionRef} style={{
+      <section id="quality-6" ref={sectionRef} style={{
         ...sectionStyle,
         opacity: 1,
         visibility: 'visible'
@@ -507,12 +530,12 @@ export default function Subchapter2_4() {
         }}>
           <div style={{ width: '100%' }}>
             {/* Title and summary */}
-            <div style={headlineStyle}>Physiology Domain</div>
+            <div style={headlineStyle}>Self-Report Domain</div>
             <p style={paraStyle}>{SUPPORT_TEXT}</p>
             
             {/* Clinical weight badge */}
             <div style={weightBadgeStyle}>
-              Clinical Weight: 0.95
+              Clinical Weight: 0.90
             </div>
             
             {/* Cube animation container */}
@@ -529,7 +552,7 @@ export default function Subchapter2_4() {
               </div>
               
               {/* Extended cards - only show current card */}
-              {PHYSIOLOGY_POINTS.map((point, index) => (
+              {SELF_REPORT_POINTS.map((point, index) => (
                 <ExtendedCard
                   key={index}
                   point={point}

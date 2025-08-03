@@ -9,8 +9,9 @@ interface SectionNavigationProps {
 export default function SectionNavigation({ scrollToSection }: SectionNavigationProps) {
   const { currentChapter, currentSubchapter, chapters } = useScroll();
   
-  // Determine if we should use light theme (Chapter 2 and its subchapters)
-  const isLightTheme = currentChapter === 2 || (currentSubchapter ? currentSubchapter.startsWith('2.') : false);
+  // Determine if we should use light theme (Chapter 2, Chapter 4 and their subchapters)
+  const isLightTheme = currentChapter === 2 || currentChapter === 4 || 
+                      (currentSubchapter ? (currentSubchapter.startsWith('2.') || currentSubchapter.startsWith('4.')) : false);
   
   return (
     <div className="note-outer-number-column" style={{ 
@@ -42,6 +43,13 @@ export default function SectionNavigation({ scrollToSection }: SectionNavigation
             displayNumber = "2.1";
             displayId = "quality-1";
             console.log('🔧 Navigation - Forcing 2.1 display for chapter 2');
+          }
+          
+          // Special case: if we're in chapter 4 but no subchapter detected, default to 4.1
+          if (isActive && chapter.number === 4 && !currentSubchapter) {
+            displayNumber = "4.1";
+            displayId = "summary-1";
+            console.log('🔧 Navigation - Forcing 4.1 display for chapter 4');
           }
           // Sizing
           const size = 90;

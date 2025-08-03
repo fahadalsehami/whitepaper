@@ -22,10 +22,10 @@ export default function Chapter3() {
         {/* Completely empty - no content */}
       </section>
       
-      {/* Subchapter 3.1: ASR Systems */}
+      {/* Subchapter 3.1: Multi-LLM Architecture Design */}
       <Subchapter3_1 />
       
-      {/* Subchapter 3.2: Transcript Analysis */}
+      {/* Subchapter 3.2: Advanced Feature Extraction Methodologies */}
       <Subchapter3_2 />
     </>
   );

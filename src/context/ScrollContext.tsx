@@ -41,10 +41,13 @@ const chapters: Chapter[] = [
     number: 2,
     title: 'QUALITY AND MONITORING',
     subchapters: [
-      { id: 'quality-1', number: 1, title: 'Quality Metrics', fullNumber: '2.1' },
-      { id: 'quality-2', number: 2, title: 'Monitoring Systems', fullNumber: '2.2' },
-      { id: 'quality-3', number: 3, title: 'Staged Releases', fullNumber: '2.3' },
-      { id: 'quality-4', number: 4, title: 'Linked Evidence', fullNumber: '2.4' },
+      { id: 'quality-1', number: 1, title: 'Audio Processing', fullNumber: '2.1' },
+      { id: 'quality-2', number: 2, title: 'Visual Analysis', fullNumber: '2.2' },
+      { id: 'quality-3', number: 3, title: 'Text Analysis', fullNumber: '2.3' },
+      { id: 'quality-4', number: 4, title: 'Physiology Domain', fullNumber: '2.4' },
+      { id: 'quality-5', number: 5, title: 'Behavior Domain', fullNumber: '2.5' },
+      { id: 'quality-6', number: 6, title: 'Self-Report Domain', fullNumber: '2.6' },
+      { id: 'quality-7', number: 7, title: 'Circuits Domain', fullNumber: '2.7' },
     ]
   },
   {
@@ -52,8 +55,8 @@ const chapters: Chapter[] = [
     number: 3,
     title: 'PERFORMANCE',
     subchapters: [
-      { id: 'performance-1', number: 1, title: 'ASR Systems', fullNumber: '3.1' },
-      { id: 'performance-2', number: 2, title: 'Transcript Analysis', fullNumber: '3.2' },
+      { id: 'performance-1', number: 1, title: 'Multi-LLM Architecture Design', fullNumber: '3.1' },
+      { id: 'performance-2', number: 2, title: 'Advanced Feature Extraction', fullNumber: '3.2' },
     ]
   },
   {
@@ -61,7 +64,7 @@ const chapters: Chapter[] = [
     number: 4,
     title: 'SUMMARY',
     subchapters: [
-      { id: 'summary-1', number: 1, title: 'Conclusion', fullNumber: '4.1' },
+      { id: 'summary-1', number: 1, title: 'Benchmark Performance Analysis', fullNumber: '4.1' },
     ]
   }
 ];

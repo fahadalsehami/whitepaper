@@ -8,8 +8,9 @@ export default function SiteHeader() {
   const { darkMode } = useHeroDarkMode();
   const { currentChapter, currentSubchapter } = useScroll();
   
-  // Override darkMode for Chapter 2 and its subchapters to use light theme
-  const isLightTheme = currentChapter === 2 || (currentSubchapter ? currentSubchapter.startsWith('2.') : false);
+  // Override darkMode for Chapter 2 and Chapter 4 and their subchapters to use light theme
+  const isLightTheme = currentChapter === 2 || currentChapter === 4 || 
+                      (currentSubchapter ? (currentSubchapter.startsWith('2.') || currentSubchapter.startsWith('4.')) : false);
   const effectiveDarkMode = isLightTheme ? false : darkMode;
   
   return (

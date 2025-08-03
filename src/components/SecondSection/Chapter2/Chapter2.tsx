@@ -1,13 +1,13 @@
 import React from 'react';
-import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
 import Subchapter2_1 from './Subchapter2_1';
 import Subchapter2_2 from './Subchapter2_2';
 import Subchapter2_3 from './Subchapter2_3';
 import Subchapter2_4 from './Subchapter2_4';
+import Subchapter2_5 from './Subchapter2_5';
+import Subchapter2_6 from './Subchapter2_6';
+import Subchapter2_7 from './Subchapter2_7';
 
 export default function Chapter2() {
-  const { darkMode } = useHeroDarkMode();
-  
   return (
     <>
       {/* Chapter 2 - Transition section for scroll detection */}
@@ -32,8 +32,17 @@ export default function Chapter2() {
       {/* Subchapter 2.3: Staged release process */}
       <Subchapter2_3 />
       
-      {/* Subchapter 2.4: Ongoing post-deployment monitoring */}
+      {/* Subchapter 2.4: Physiology Domain */}
       <Subchapter2_4 />
+      
+      {/* Subchapter 2.5: Behavior Domain */}
+      <Subchapter2_5 />
+      
+      {/* Subchapter 2.6: Self-Report Domain */}
+      <Subchapter2_6 />
+      
+      {/* Subchapter 2.7: Circuits Domain */}
+      <Subchapter2_7 />
     </>
   );
 }

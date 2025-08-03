@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { useScroll } from '../../../context/ScrollContext';
 import Subchapter4_1 from './Subchapter4_1';
 
 export default function Chapter4() {
-  const { darkMode } = useHeroDarkMode();
+  const { darkMode, setDarkMode } = useHeroDarkMode();
+  const { currentChapter } = useScroll();
+  
+  // Force light theme for Chapter 4
+  useEffect(() => {
+    if (currentChapter === 4) {
+      setDarkMode(false);
+    }
+  }, [currentChapter, setDarkMode]);
   
   return (
     <>
-      {/* Chapter 4 - Empty section, no height, no content */}
+      {/* Chapter 4 - Empty section, no height, no content - Always light theme */}
       <section id="chapter-4" style={{ 
-        background: darkMode ? '#000' : '#fff', 
+        background: '#ffffff', // Always white for Chapter 4
         height: '1px', // Minimal height just for scroll detection
         width: '100%', 
         padding: 0,
@@ -21,7 +30,7 @@ export default function Chapter4() {
         {/* Completely empty - no content */}
       </section>
       
-      {/* Subchapter 4.1: Conclusion */}
+      {/* Subchapter 4.1: Benchmark Performance Analysis */}
       <Subchapter4_1 />
     </>
   );
