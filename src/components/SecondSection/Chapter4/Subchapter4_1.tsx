@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -94,6 +95,14 @@ export default function Subchapter4_1() {
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      return;
+    }
+
     // PIN SECTION DURING SCROLL - similar to subchapter 1.3
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -107,20 +116,22 @@ export default function Subchapter4_1() {
       scrollTrigger.kill();
     };
 
-  }, [isActive]);
+  }, [isActive, isMobile]);
 
   // Responsive styles - Light theme
-  const sectionStyle: React.CSSProperties = {
-    background: '#ffffff',
-    minHeight: '100vh',
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? getMobileSectionStyle('light')
+    : {
+        background: '#ffffff',
+        minHeight: '100vh',
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      };
   
   const contentStyle: React.CSSProperties = {
     width: '100%',
@@ -135,26 +146,30 @@ export default function Subchapter4_1() {
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 28 : 42,
-    fontWeight: 700,
-    color: '#000000',
-    margin: 0,
-    marginBottom: isMobile ? 16 : 24,
-    lineHeight: 1.1,
-    textTransform: 'uppercase',
-    letterSpacing: -0.02,
-  };
+  const headlineStyle: React.CSSProperties = isMobile
+    ? getMobileTypography('headline', 'light')
+    : {
+        fontSize: 42,
+        fontWeight: 700,
+        color: '#000000',
+        margin: 0,
+        marginBottom: 24,
+        lineHeight: 1.1,
+        textTransform: 'uppercase',
+        letterSpacing: -0.02,
+      };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 14 : 16,
-    lineHeight: 1.6,
-    color: '#333333',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48,
-    fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 600,
-  };
+  const paraStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('body', 'light'), color: '#333333' }
+    : {
+        fontSize: 16,
+        lineHeight: 1.6,
+        color: '#333333',
+        margin: 0,
+        marginBottom: 48,
+        fontWeight: 400,
+        maxWidth: 600,
+      };
 
   // Two-column grid layout - matching subchapter 1.3
   const gridsContainerStyle: React.CSSProperties = {
@@ -177,25 +192,40 @@ export default function Subchapter4_1() {
     overflowY: isMobile ? 'visible' : 'auto',
   };
 
-  const getLeftCardStyle = (isSelected: boolean): React.CSSProperties => ({
-    background: '#ffffff',
-    border: isSelected ? '2px solid rgba(0, 0, 0, 0.8)' : '1px solid rgba(0, 0, 0, 0.1)',
-    borderRadius: isSelected ? 0 : (isMobile ? 8 : 12),
-    padding: isMobile ? '16px' : '20px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    minHeight: isSelected ? (isMobile ? 100 : 120) : 'auto',
-    flex: '0 0 auto',
-    boxShadow: isSelected ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
-  });
+  const getLeftCardStyle = (isSelected: boolean): React.CSSProperties => isMobile
+    ? {
+        ...getMobileCardStyle('light'),
+        background: '#ffffff',
+        border: isSelected ? '2px solid rgba(0, 0, 0, 0.8)' : '1px solid rgba(0, 0, 0, 0.1)',
+        borderRadius: 0, // Sharp corners for minimalistic look
+        cursor: 'pointer',
+        transition: 'none', // No animations on mobile
+        boxShadow: 'none',
+      }
+    : {
+        background: '#ffffff',
+        border: isSelected ? '2px solid rgba(0, 0, 0, 0.8)' : '1px solid rgba(0, 0, 0, 0.1)',
+        borderRadius: isSelected ? 0 : 12,
+        padding: '20px',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        minHeight: isSelected ? 120 : 'auto',
+        flex: '0 0 auto',
+        boxShadow: isSelected ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
+      };
 
-  const leftCardTitleStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18,
-    fontWeight: 600,
-    color: '#000000',
-    lineHeight: 1.2,
-    marginBottom: 0,
-  };
+  const leftCardTitleStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileTypography('title', 'light'),
+        marginBottom: 0,
+      }
+    : {
+        fontSize: 18,
+        fontWeight: 600,
+        color: '#000000',
+        lineHeight: 1.2,
+        marginBottom: 0,
+      };
 
   const getLeftCardTitleOpacity = (isSelected: boolean): React.CSSProperties => ({
     ...leftCardTitleStyle,
@@ -203,13 +233,19 @@ export default function Subchapter4_1() {
     marginBottom: isSelected ? (isMobile ? 8 : 12) : 0,
   });
 
-  const leftCardSummaryStyle: React.CSSProperties = {
-    fontSize: isMobile ? 12 : 14,
-    fontWeight: 400,
-    color: '#666666',
-    lineHeight: 1.4,
-    fontStyle: 'italic',
-  };
+  const leftCardSummaryStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileTypography('body', 'light'),
+        color: '#666666',
+        fontStyle: 'italic',
+      }
+    : {
+        fontSize: 14,
+        fontWeight: 400,
+        color: '#666666',
+        lineHeight: 1.4,
+        fontStyle: 'italic',
+      };
 
   // RIGHT GRID STYLES - Modern aligned table structure (Light theme)
   const rightGridContainerStyle: React.CSSProperties = {

@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -262,10 +263,22 @@ export default function Subchapter2_7() {
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      // Set static positions for mobile - show all content immediately
+      if (cubeRef.current) {
+        gsap.set(cubeRef.current, { opacity: 1, x: 0, y: 0 });
+      }
+      return;
+    }
+
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=3000', // Extended scroll distance for 5 cards
+      end: '+=2000', // Reduced scroll distance for smoother transition to Chapter 3
       pin: true,
       scrub: 0.5,
       onUpdate: (self) => {
@@ -332,6 +345,29 @@ export default function Subchapter2_7() {
   
   // Separate Right Cube Component  
   const RightCube = ({ progress }: { progress: number }) => {
+    const [mounted, setMounted] = useState(false);
+    
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+    
+    if (!mounted) {
+      // Render with static position to prevent hydration mismatch
+      return (
+        <div style={{
+          position: 'absolute',
+          left: '1500px', // Off-screen position
+          top: '40%',
+          transform: 'translateY(-50%) scale(0.1) rotate(0deg)',
+          transition: 'none'
+        }}>
+          <svg width="267" height="321" viewBox="0 0 267 321" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M125.778 164.304V306.866L7.5 235.845V93.2812L125.778 164.304ZM259.057 235.844L140.778 306.866V164.304L259.057 93.2812V235.844ZM251.986 80.0293L133.277 151.312L14.5693 80.0293L133.278 8.74707L251.986 80.0293Z" fill="black" stroke="#FEFFFA" strokeWidth="15"/>
+          </svg>
+        </div>
+      );
+    }
+    
     const totalProgress = progress * CIRCUITS_POINTS.length;
     const rightCubePhase = Math.max(0, Math.min(1, (totalProgress - 1) * 2)); // Starts after left cube completes
     
@@ -385,25 +421,32 @@ export default function Subchapter2_7() {
     };
     
     return (
-      <div style={{
+      <div style={isMobile ? {
+        ...getMobileCardStyle('light'),
+        background: '#f7f7f7',
+        display: showCard ? 'flex' : 'none',
+        flexDirection: 'column',
+        marginBottom: 12,
+        position: 'static'
+      } : {
         position: 'absolute',
-        top: cardPosition.top, // Same position for all cards
-        left: cardPosition.left, // Positioned after red line toward right
-        width: isMobile ? 280 : 400, // Match subchapter 2.2 width
-        minWidth: isMobile ? 280 : 400, // Match subchapter 2.2 min-width
-        background: '#f7f7f7', // Light gray background like subchapter 2.2
+        top: cardPosition.top,
+        left: cardPosition.left,
+        width: 400,
+        minWidth: 400,
+        background: '#f7f7f7',
         border: 'none',
-        borderRadius: 0, // No rounded corners
-        padding: isMobile ? '24px 20px 20px 24px' : '32px 40px 24px 40px', // Match subchapter 2.2 padding
+        borderRadius: 0,
+        padding: '32px 40px 24px 40px',
         color: '#000000',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        minHeight: isMobile ? 220 : 270, // Match subchapter 2.2 height
+        minHeight: 270,
         position: 'absolute',
         opacity: fadeOpacity,
-        transition: showCard ? 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.2s ease-out', // Only opacity transition
+        transition: showCard ? 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.2s ease-out',
         zIndex: 10 - index,
         boxShadow: showCard ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
       }}>
@@ -448,17 +491,19 @@ export default function Subchapter2_7() {
     );
   };
 
-  const sectionStyle: React.CSSProperties = {
-    background: '#ffffff',
-    minHeight: '100vh',
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? getMobileSectionStyle('light')
+    : {
+        background: '#ffffff',
+        minHeight: '100vh',
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      };
   
   const contentStyle: React.CSSProperties = {
     width: '100%',
@@ -473,39 +518,53 @@ export default function Subchapter2_7() {
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 32 : 48,
-    fontWeight: 700,
-    color: '#000000',
-    margin: 0,
-    marginBottom: isMobile ? 24 : 32,
-    lineHeight: 1.1,
-    textTransform: 'uppercase',
-    letterSpacing: -0.02,
-  };
+  const headlineStyle: React.CSSProperties = isMobile
+    ? getMobileTypography('headline', 'light')
+    : {
+        fontSize: 48,
+        fontWeight: 700,
+        color: '#000000',
+        margin: 0,
+        marginBottom: 32,
+        lineHeight: 1.1,
+        textTransform: 'uppercase',
+        letterSpacing: -0.02,
+      };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18,
-    lineHeight: 1.7,
-    color: '#333333',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48,
-    fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 600,
-  };
+  const paraStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('body', 'light'), color: '#666666' }
+    : {
+        fontSize: 18,
+        lineHeight: 1.7,
+        color: '#333333',
+        margin: 0,
+        marginBottom: 48,
+        fontWeight: 400,
+        maxWidth: 600,
+      };
 
-  const cubeContainerStyle: React.CSSProperties = {
-    position: 'relative',
-    width: '100%',
-    height: isMobile ? '500px' : '700px', // Increased height for better grid visibility
-    display: 'flex',
-    alignItems: 'flex-start', // Changed to flex-start
-    justifyContent: 'flex-start',
-    paddingLeft: isMobile ? '40px' : '100px', // Increased padding for better spacing
-    paddingTop: '4px', // Only 4 spacing from top summary
-    background: 'linear-gradient(90deg, #f5f5f5 1px, transparent 1px), linear-gradient(#f5f5f5 1px, transparent 1px)', // Grid background
-    backgroundSize: '50px 50px', // Grid size
-  };
+  const cubeContainerStyle: React.CSSProperties = isMobile
+    ? {
+        position: 'relative',
+        width: '100%',
+        height: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        padding: 0
+      }
+    : {
+        position: 'relative',
+        width: '100%',
+        height: '700px',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        paddingLeft: '100px',
+        paddingTop: '4px',
+        background: 'linear-gradient(90deg, #f5f5f5 1px, transparent 1px), linear-gradient(#f5f5f5 1px, transparent 1px)',
+        backgroundSize: '50px 50px',
+      };
 
   const weightBadgeStyle: React.CSSProperties = {
     position: 'absolute',
@@ -533,6 +592,21 @@ export default function Subchapter2_7() {
           background: #000000 !important;
           color: white !important;
         }
+        ${isMobile ? `
+        /* Disable only SVG animations on mobile - keep scroll/navigation working */
+        svg .attention-beam,
+        svg .decision-line,
+        svg .empathy-connection,
+        svg .executive-core,
+        svg .focus-center,
+        svg .integration-hub,
+        svg .memory-core,
+        svg .neural-circuit,
+        svg .retrieval-path,
+        svg .social-node {
+          animation: none !important;
+        }
+        ` : ''}
       `}</style>
       
       <section id="quality-7" ref={sectionRef} style={{
@@ -569,19 +643,72 @@ export default function Subchapter2_7() {
                 <RightCube progress={scrollProgress} />
               </div>
               
-              {/* Extended cards - only show current card */}
-              {CIRCUITS_POINTS.map((point, index) => (
-                <ExtendedCard
-                  key={index}
-                  point={point}
-                  index={index}
-                  isVisible={true}
-                  progress={scrollProgress}
-                />
-              ))}
+              {/* Extended cards - mobile shows all, desktop shows current only */}
+              {isMobile ? (
+                // Mobile: Show all cards in vertical stack
+                CIRCUITS_POINTS.map((point, index) => (
+                  <div key={index} style={{
+                    ...getMobileCardStyle('light'),
+                    background: '#f7f7f7',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: 12
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      marginBottom: 16,
+                      width: '100%'
+                    }}>
+                      <div style={{
+                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {point.icon}
+                      </div>
+                      <div style={{
+                        ...getMobileTypography('title', 'light'),
+                        flex: 1
+                      }}>
+                        {point.title}
+                      </div>
+                    </div>
+                    <div style={{
+                      ...getMobileTypography('body', 'light'),
+                      color: '#666666'
+                    }}>
+                      {point.content}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                // Desktop: Show animated cards
+                CIRCUITS_POINTS.map((point, index) => (
+                  <ExtendedCard
+                    key={index}
+                    point={point}
+                    index={index}
+                    isVisible={true}
+                    progress={scrollProgress}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
+
+        {/* End marker for smooth transition to Chapter 3 */}
+        <div style={{ 
+          height: '1px', 
+          width: '100%',
+          position: 'absolute',
+          bottom: 0,
+          left: 0
+        }} />
+
       </section>
     </>
   );

@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
+import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,9 +109,17 @@ export default function Subchapter1_1() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const { currentSubchapter } = useScroll();
+  const { setDarkMode } = useHeroDarkMode();
   
   // Only show content when we transition from chapter-1 to subchapter 1.1
   const isActive = currentSubchapter === '1.1';
+
+  // Set dark theme when this subchapter is active
+  useEffect(() => {
+    if (isActive) {
+      setDarkMode(true);
+    }
+  }, [isActive, setDarkMode]);
 
   // 🔧 FUNCTION TO RENDER BOLD TEXT
   const renderBoldText = (text: string) => {
@@ -164,12 +174,23 @@ export default function Subchapter1_1() {
     const cardsElement = cardsRef.current;
     
     // 🎯 RESPONSIVE CARD CALCULATIONS - Controls animation timing
-    const isMobile = window.innerWidth <= 768;
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      // Set static positions for mobile
+      if (cardsRef.current) {
+        gsap.set(cardsRef.current, { x: 0, opacity: 1 });
+      }
+      return;
+    }
+    
+    const isMobile = checkMobile;
     const cardWidth = isMobile ? 280 : 400; // 🔧 MOBILE: 280px, DESKTOP: 400px
     const cardGap = isMobile ? 24 : 50; // 🔧 MOBILE: 24px, DESKTOP: 50px
     const cardStep = cardWidth + cardGap; // Distance to move for each card
     const totalCards = CARDS.length; // 5 cards
-    const containerWidth = isMobile ? window.innerWidth - 40 : 1290; // 🔧 MOBILE: full width minus padding
+    const containerWidth = isMobile ? (typeof window !== 'undefined' ? window.innerWidth - 40 : 360) : 1290; // 🔧 MOBILE: full width minus padding
     const visibleCards = isMobile ? 1 : 2; // 🔧 MOBILE: 1 card, DESKTOP: 2 cards
     
     // 🔧 START POSITION: Cards start completely off-screen right
@@ -247,7 +268,11 @@ export default function Subchapter1_1() {
   }, []);
 
   // 📱 RESPONSIVE STYLES
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle: React.CSSProperties = isMobile ? {
+    ...getMobileSectionStyle('dark'),
+    minHeight: 'auto', // Remove fixed viewport heights on mobile
+    padding: '40px 16px' // Mobile-optimized padding
+  } : {
     background: '#000',
     minHeight: '100vh',
     width: '100%',
@@ -263,81 +288,120 @@ export default function Subchapter1_1() {
     width: '100%',
     maxWidth: isMobile ? '100%' : 1400,
     margin: '0 auto',
-    padding: isMobile ? '80px 20px 0 20px' : '158px 32px 0 0', // 🔧 MOBILE: reduced padding
+    padding: isMobile ? '20px 16px 0 16px' : '158px 32px 0 0', // Reduced mobile padding
     position: 'relative',
-    minHeight: '100vh',
+    minHeight: isMobile ? 'auto' : '100vh', // Remove fixed height on mobile
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 32 : 48, // 🔧 MOBILE: smaller font
+  const headlineStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('headline', 'dark'),
+    fontSize: '24px', // Mobile-optimized headline
+    textTransform: 'none' // Remove text transform on mobile
+  } : {
+    fontSize: 48,
     fontWeight: 700,
     color: '#fff',
-    margin: 0,
-    marginBottom: isMobile ? 24 : 32, // 🔧 MOBILE: reduced margin
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 32,
+    marginLeft: 0,
     lineHeight: 1.1,
     textTransform: 'uppercase',
     letterSpacing: -0.02,
   };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18, // 🔧 MOBILE: smaller font
+  const paraStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('body', 'dark'),
+    fontSize: '14px', // Mobile-optimized body text
+    lineHeight: 1.5, // Better mobile readability
+    maxWidth: '100%'
+  } : {
+    fontSize: 18,
     lineHeight: 1.7,
     color: '#eaeaea',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48, // 🔧 MOBILE: reduced margin
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 48,
+    marginLeft: 0,
     fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 600, // 🔧 MOBILE: full width
+    maxWidth: 600,
   };
 
   // 📱 RESPONSIVE CARD CONTAINER - adapt to screen size
   const cardsContainerStyle: React.CSSProperties = {
     width: '100%',
-    maxWidth: isMobile ? '100%' : '1290px', // 🔧 MOBILE: full width
-    marginTop: isMobile ? 32 : 48, // 🔧 MOBILE: reduced margin
-    overflow: 'hidden', // Hide cards that are off-screen
+    maxWidth: isMobile ? '100%' : '1290px',
+    marginTop: isMobile ? 24 : 48,
+    overflow: isMobile ? 'visible' : 'hidden', // Remove horizontal scrolling on mobile
     position: 'relative',
-    paddingRight: isMobile ? '20px' : '50px', // 🔧 MOBILE: reduced padding
+    paddingRight: isMobile ? '0' : '50px', // Remove padding on mobile
   };
 
-  const cardsRowStyle: React.CSSProperties = {
+  const cardsRowStyle: React.CSSProperties = isMobile ? {
     display: 'flex',
-    gap: isMobile ? 24 : 50, // 🔧 MOBILE: smaller gap
+    flexDirection: 'column', // Stack cards vertically on mobile
+    gap: 12, // Reduced gap for mobile
+    width: '100%',
+  } : {
+    display: 'flex',
+    gap: 50,
     width: 'max-content',
     willChange: 'transform',
   };
 
-  const cardStyle: React.CSSProperties = {
-    background: 'transparent', // Clean transparent look
-    border: 'none', // No border as shown in screenshot
-    borderRadius: isMobile ? 16 : 20, // 🔧 MOBILE: smaller radius
-    padding: isMobile ? '24px' : '40px', // 🔧 MOBILE: reduced padding
-    width: isMobile ? 280 : 400, // 🔧 MOBILE: smaller width
-    minWidth: isMobile ? 280 : 400, // 🔧 MOBILE: smaller min-width
+  const cardStyle: React.CSSProperties = isMobile ? {
+    ...getMobileCardStyle('dark'),
+    background: 'transparent',
+    border: 'none',
+    borderRadius: 0, // Minimalistic sharp corners for mobile
     color: '#fff',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    minHeight: isMobile ? 200 : 250, // 🔧 MOBILE: smaller height
+    minHeight: 200,
+    position: 'relative',
+    transition: 'none', // Remove hover effects on mobile
+    transform: 'none'
+  } : {
+    background: 'transparent',
+    border: 'none',
+    borderRadius: 20,
+    padding: '40px',
+    width: 400,
+    minWidth: 400,
+    color: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    minHeight: 250,
     position: 'relative',
   };
 
-  const cardTitleStyle: React.CSSProperties = {
-    fontSize: isMobile ? 22 : 28, // 🔧 MOBILE: smaller font
+  const cardTitleStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('headline', 'dark'),
+    fontSize: '24px', // Mobile-optimized headline size
+    marginBottom: '16px'
+  } : {
+    fontSize: 28,
     fontWeight: 700,
-    marginBottom: isMobile ? 16 : 20, // 🔧 MOBILE: reduced margin
+    marginBottom: 20,
     lineHeight: 1.2,
     color: '#fff',
   };
 
-  const cardTextStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18, // 🔧 MOBILE: smaller font
+  const cardTextStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('body', 'dark'),
+    fontSize: '14px', // Mobile-optimized body size
+    marginBottom: '24px'
+  } : {
+    fontSize: 18,
     lineHeight: 1.6,
     color: '#eaeaea',
-    marginBottom: isMobile ? 24 : 36, // 🔧 MOBILE: reduced spacing for icon
+    marginBottom: 36,
   };
 
   const expandIconStyle: React.CSSProperties = {

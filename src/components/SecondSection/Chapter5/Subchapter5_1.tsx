@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,6 +90,17 @@ export default function Subchapter5_1() {
   useEffect(() => {
     if (!isActive || !sectionRef.current || !achievementsRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      // Set static positions for mobile - show all content immediately
+      const achievementCards = achievementsRef.current.querySelectorAll('.achievement-card');
+      gsap.set(achievementCards, { opacity: 1, y: 0, scale: 1 });
+      return;
+    }
+
     // PIN SECTION DURING SCROLL
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -121,20 +133,22 @@ export default function Subchapter5_1() {
       scrollTrigger.kill();
     };
 
-  }, [isActive]);
+  }, [isActive, isMobile]);
 
   // Responsive styles - Dark theme
-  const sectionStyle: React.CSSProperties = {
-    background: '#000000',
-    minHeight: '100vh',
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? getMobileSectionStyle('dark')
+    : {
+        background: '#000000',
+        minHeight: '100vh',
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      };
   
   const contentStyle: React.CSSProperties = {
     width: '100%',
@@ -149,35 +163,47 @@ export default function Subchapter5_1() {
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 32 : 48,
-    fontWeight: 700,
-    color: '#ffffff',
-    margin: 0,
-    marginBottom: isMobile ? 12 : 16,
-    lineHeight: 1.1,
-    textTransform: 'uppercase',
-    letterSpacing: -0.02,
-  };
+  const headlineStyle: React.CSSProperties = isMobile
+    ? getMobileTypography('headline', 'dark')
+    : {
+        fontSize: 48,
+        fontWeight: 700,
+        color: '#ffffff',
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: 16,
+        marginLeft: 0,
+        lineHeight: 1.1,
+        textTransform: 'uppercase',
+        letterSpacing: -0.02,
+      };
 
-  const subHeadlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 20 : 24,
-    fontWeight: 600,
-    color: '#cccccc',
-    margin: 0,
-    marginBottom: isMobile ? 20 : 28,
-    lineHeight: 1.3,
-  };
+  const subHeadlineStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('title', 'dark'), color: '#cccccc' }
+    : {
+        fontSize: 24,
+        fontWeight: 600,
+        color: '#cccccc',
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: 28,
+        marginLeft: 0,
+        lineHeight: 1.3,
+      };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 14 : 16,
-    lineHeight: 1.6,
-    color: '#eaeaea',
-    margin: 0,
-    marginBottom: isMobile ? 40 : 56,
-    fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 700,
-  };
+  const paraStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('body', 'dark'), color: '#eaeaea' }
+    : {
+        fontSize: 16,
+        lineHeight: 1.6,
+        color: '#eaeaea',
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: 56,
+        marginLeft: 0,
+        fontWeight: 400,
+        maxWidth: 700,
+      };
 
   // Modern achievements grid
   const achievementsContainerStyle: React.CSSProperties = {
@@ -190,16 +216,27 @@ export default function Subchapter5_1() {
     position: 'relative',
   };
 
-  const achievementCardStyle: React.CSSProperties = {
-    background: '#ffffff',
-    border: '2px solid #000000',
-    borderRadius: 0,
-    padding: isMobile ? '24px' : '32px',
-    position: 'relative',
-    overflow: 'hidden',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
-  };
+  const achievementCardStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileCardStyle('dark'),
+        background: '#ffffff',
+        border: '2px solid #000000',
+        borderRadius: 0, // Sharp corners for minimalistic look
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'none', // No animations on mobile
+        cursor: 'default',
+      }
+    : {
+        background: '#ffffff',
+        border: '2px solid #000000',
+        borderRadius: 0,
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+      };
 
   const achievementIconStyle: React.CSSProperties = {
     width: isMobile ? 32 : 40,
@@ -249,10 +286,12 @@ export default function Subchapter5_1() {
           background: #145dfc !important;
           color: white !important;
         }
-        .achievement-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-          border-color: #000000;
+        @media (min-width: 769px) {
+          .achievement-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-color: #000000;
+          }
         }
       `}</style>
       

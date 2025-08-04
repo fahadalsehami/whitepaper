@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,6 +81,18 @@ export default function Subchapter5_2() {
   useEffect(() => {
     if (!isActive || !sectionRef.current || !statementRef.current || !impactAreasRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      // Set static positions for mobile - show all content immediately
+      gsap.set(statementRef.current, { opacity: 1, scale: 1, y: 0 });
+      const impactCards = impactAreasRef.current.querySelectorAll('.impact-card');
+      gsap.set(impactCards, { opacity: 1, y: 0, scale: 1 });
+      return;
+    }
+
     // PIN SECTION DURING SCROLL
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -131,20 +144,26 @@ export default function Subchapter5_2() {
       tl.kill();
     };
 
-  }, [isActive]);
+  }, [isActive, isMobile]);
 
   // Responsive styles - Dark theme
-  const sectionStyle: React.CSSProperties = {
-    background: '#000000',
-    minHeight: '100vh',
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileSectionStyle('dark'),
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
+    : {
+        background: '#000000',
+        minHeight: '100vh',
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
   
   const contentStyle: React.CSSProperties = {
     width: '100%',
@@ -160,37 +179,57 @@ export default function Subchapter5_2() {
     textAlign: 'center',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 28 : 36,
-    fontWeight: 600,
-    color: '#ffffff',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48,
-    lineHeight: 1.2,
-    letterSpacing: -0.01,
-  };
+  const headlineStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('headline', 'dark'), fontSize: 28 }
+    : {
+        fontSize: 36,
+        fontWeight: 600,
+        color: '#ffffff',
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: 48,
+        marginLeft: 0,
+        lineHeight: 1.2,
+        letterSpacing: -0.01,
+      };
 
   // Elegant statement container
-  const statementContainerStyle: React.CSSProperties = {
-    background: '#ffffff',
-    border: '3px solid #000000',
-    borderRadius: 0,
-    padding: isMobile ? '32px 24px' : '48px 40px',
-    marginBottom: isMobile ? 48 : 64,
-    position: 'relative',
-    maxWidth: isMobile ? '100%' : 900,
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  };
+  const statementContainerStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileCardStyle('dark'),
+        background: '#ffffff',
+        border: '3px solid #000000',
+        borderRadius: 0, // Sharp corners for minimalistic look
+        position: 'relative',
+        boxShadow: 'none', // No shadow on mobile
+      }
+    : {
+        background: '#ffffff',
+        border: '3px solid #000000',
+        borderRadius: 0,
+        padding: '48px 40px',
+        marginBottom: 64,
+        position: 'relative',
+        maxWidth: 900,
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+      };
 
-  const statementStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 20,
-    lineHeight: 1.7,
-    color: '#000000',
-    margin: 0,
-    fontWeight: 400,
-    fontStyle: 'italic',
-    textAlign: 'left',
-  };
+  const statementStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileTypography('body', 'light'),
+        color: '#000000',
+        fontStyle: 'italic',
+        textAlign: 'left',
+      }
+    : {
+        fontSize: 20,
+        lineHeight: 1.7,
+        color: '#000000',
+        margin: 0,
+        fontWeight: 400,
+        fontStyle: 'italic',
+        textAlign: 'left',
+      };
 
   // Impact areas grid
   const impactAreasContainerStyle: React.CSSProperties = {
@@ -202,16 +241,27 @@ export default function Subchapter5_2() {
     position: 'relative',
   };
 
-  const impactCardStyle: React.CSSProperties = {
-    background: '#ffffff',
-    borderRadius: 0,
-    padding: isMobile ? '24px' : '32px',
-    position: 'relative',
-    overflow: 'hidden',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
-    border: '2px solid #000000',
-  };
+  const impactCardStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileCardStyle('dark'),
+        background: '#ffffff',
+        border: '2px solid #000000',
+        borderRadius: 0, // Sharp corners for minimalistic look
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'none', // No animations on mobile
+        cursor: 'default',
+      }
+    : {
+        background: '#ffffff',
+        borderRadius: 0,
+        padding: '32px',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+        border: '2px solid #000000',
+      };
 
   const impactIconStyle: React.CSSProperties = {
     width: isMobile ? 32 : 40,
@@ -249,9 +299,11 @@ export default function Subchapter5_2() {
           background: #145dfc !important;
           color: white !important;
         }
-        .impact-card:hover {
-          transform: translateY(-6px) scale(1.02);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        @media (min-width: 769px) {
+          .impact-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+          }
         }
         .statement-container::before {
           content: '';

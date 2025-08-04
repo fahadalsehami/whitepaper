@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
+import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -70,9 +72,31 @@ export default function Subchapter3_2() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const { currentSubchapter } = useScroll();
+  const { setDarkMode } = useHeroDarkMode();
+  
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Only show content when we transition to subchapter 3.2
   const isActive = currentSubchapter === '3.2';
+
+  // Set dark theme when this subchapter is active
+  useEffect(() => {
+    if (isActive) {
+      setDarkMode(true);
+    }
+  }, [isActive, setDarkMode]);
 
   // Function to render bold text
   const renderBoldText = (text: string) => {
@@ -124,16 +148,26 @@ export default function Subchapter3_2() {
   useEffect(() => {
     if (!isActive || !sectionRef.current || !cardsRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile - show all cards statically
+    if (checkMobile) {
+      if (cardsRef.current) {
+        gsap.set(cardsRef.current, { x: 0, opacity: 1 });
+      }
+      return;
+    }
+
     const cardsElement = cardsRef.current;
     
     // Responsive card calculations - Controls animation timing
-    const isMobile = window.innerWidth <= 768;
-    const cardWidth = isMobile ? 280 : 400; // Mobile: 280px, Desktop: 400px
-    const cardGap = isMobile ? 24 : 50; // Mobile: 24px, Desktop: 50px
+    const cardWidth = 400; // Desktop: 400px
+    const cardGap = 50; // Desktop: 50px
     const cardStep = cardWidth + cardGap; // Distance to move for each card
     const totalCards = CARDS.length; // 3 cards
-    const containerWidth = isMobile ? window.innerWidth - 40 : 1290; // Mobile: full width minus padding
-    const visibleCards = isMobile ? 1 : 2; // Mobile: 1 card, Desktop: 2 cards
+    const containerWidth = 1290; // Desktop container width
+    const visibleCards = 2; // Desktop: 2 cards
     
     // Start position: Cards start completely off-screen right
     const startX = containerWidth; // Start at container edge
@@ -188,37 +222,25 @@ export default function Subchapter3_2() {
       scrollTrigger.kill();
     };
 
-  }, [isActive]);
+  }, [isActive, isMobile]);
 
-  // Responsive detection
-  const [isMobile, setIsMobile] = useState(false);
-  
   // Animated highlights state
   const [highlightProgress, setHighlightProgress] = useState(0);
-  
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Responsive styles
-  const sectionStyle: React.CSSProperties = {
-    background: '#000',
-    minHeight: '100vh',
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? getMobileSectionStyle('dark')
+    : {
+        background: '#000',
+        minHeight: '100vh',
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+      };
   
   const contentStyle: React.CSSProperties = {
     width: '100%',
@@ -233,58 +255,80 @@ export default function Subchapter3_2() {
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 32 : 48, // Mobile: smaller font
-    fontWeight: 700,
-    color: '#fff',
-    margin: 0,
-    marginBottom: isMobile ? 24 : 32, // Mobile: reduced margin
-    lineHeight: 1.1,
-    textTransform: 'uppercase',
-    letterSpacing: -0.02,
-  };
+  const headlineStyle: React.CSSProperties = isMobile
+    ? getMobileTypography('headline', 'dark')
+    : {
+        fontSize: 48,
+        fontWeight: 700,
+        color: '#fff',
+        margin: 0,
+        marginBottom: 32,
+        lineHeight: 1.1,
+        textTransform: 'uppercase',
+        letterSpacing: -0.02,
+      };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18, // Mobile: smaller font
-    lineHeight: 1.7,
-    color: '#eaeaea',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48, // Mobile: reduced margin
-    fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 600, // Mobile: full width
-  };
+  const paraStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('body', 'dark'), color: '#eaeaea' }
+    : {
+        fontSize: 18,
+        lineHeight: 1.7,
+        color: '#eaeaea',
+        margin: 0,
+        marginBottom: 48,
+        fontWeight: 400,
+        maxWidth: 600,
+      };
 
   // Responsive card container - adapt to screen size
-  const cardsContainerStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '1290px', // Mobile: full width
-    marginTop: isMobile ? 32 : 48, // Mobile: reduced margin
-    overflow: 'hidden', // Hide cards that are off-screen
-    position: 'relative',
-    paddingRight: isMobile ? '20px' : '50px', // Mobile: reduced padding
-  };
+  const cardsContainerStyle: React.CSSProperties = isMobile
+    ? {
+        position: 'relative',
+        width: '100%',
+        height: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        padding: 0
+      }
+    : {
+        width: '100%',
+        maxWidth: '1290px',
+        marginTop: 48,
+        overflow: 'hidden',
+        position: 'relative',
+        paddingRight: '50px',
+      };
 
   const cardsRowStyle: React.CSSProperties = {
     display: 'flex',
-    gap: isMobile ? 24 : 50, // Mobile: smaller gap
+    gap: isMobile ? 24 : 50,
     width: 'max-content',
     willChange: 'transform',
   };
 
-  const cardStyle: React.CSSProperties = {
-    background: 'transparent', // Clean transparent look
-    border: 'none', // No border as shown in screenshot
-    borderRadius: isMobile ? 16 : 20, // Mobile: smaller radius
-    padding: isMobile ? '24px' : '40px', // Mobile: reduced padding
-    width: isMobile ? 280 : 400, // Mobile: smaller width
-    minWidth: isMobile ? 280 : 400, // Mobile: smaller min-width
-    color: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    minHeight: isMobile ? 200 : 250, // Mobile: smaller height
-    position: 'relative',
-  };
+  const cardStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileCardStyle('dark'),
+        background: '#1a1a1a',
+        border: '1px solid #333333',
+        borderRadius: 0, // Sharp corners for minimalistic look
+        color: '#fff'
+      }
+    : {
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 20,
+        padding: '40px',
+        width: 400,
+        minWidth: 400,
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        minHeight: 250,
+        position: 'relative',
+      };
 
   const cardTitleStyle: React.CSSProperties = {
     fontSize: isMobile ? 22 : 28, // Mobile: smaller font
@@ -349,18 +393,40 @@ export default function Subchapter3_2() {
           <div className="background-pinned-headline" style={headlineStyle}>Advanced Feature Extraction Methodologies</div>
           <p className="background-pinned-paragraph" style={paraStyle}>{renderHighlightedText(SUPPORT_TEXT)}</p>
           
-          {/* Simple cards with animation */}
+          {/* Cards with mobile optimization */}
           <div style={cardsContainerStyle}>
-            <div ref={cardsRef} style={cardsRowStyle}>
-              {CARDS.map((card, index) => (
+            {isMobile ? (
+              // Mobile: Show all cards in vertical stack
+              CARDS.map((card, index) => (
                 <div key={index} style={cardStyle}>
-                  {/* Content layout matching screenshot */}
-                  <div style={cardTitleStyle}>{card.title}</div>
-                  <div style={cardTextStyle}>{renderBoldText(card.text)}</div>
-                  
-                  {/* Expand icon positioned at bottom right */}
+                  <div style={{
+                    ...getMobileTypography('title', 'dark'),
+                    marginBottom: 16
+                  }}>
+                    {card.title}
+                  </div>
+                  <div style={{
+                    ...getMobileTypography('body', 'dark'),
+                    color: '#eaeaea',
+                    marginBottom: 24
+                  }}>
+                    {renderBoldText(card.text)}
+                  </div>
                   <div 
-                    style={expandIconStyle}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: '50%',
+                      border: '1.5px solid rgba(255, 255, 255, 0.7)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      background: 'transparent',
+                      alignSelf: 'flex-end',
+                      marginTop: 'auto',
+                    }}
                     onClick={() => setExpandedCard(index)}
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -368,8 +434,26 @@ export default function Subchapter3_2() {
                     </svg>
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              // Desktop: Show animated cards
+              <div ref={cardsRef} style={cardsRowStyle}>
+                {CARDS.map((card, index) => (
+                  <div key={index} style={cardStyle}>
+                    <div style={cardTitleStyle}>{card.title}</div>
+                    <div style={cardTextStyle}>{renderBoldText(card.text)}</div>
+                    <div 
+                      style={expandIconStyle}
+                      onClick={() => setExpandedCard(index)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 3v10M3 8h10" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           </div>
         </div>

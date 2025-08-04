@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 const SUPPORT_TEXT = "Our multi-modal agentic AI system represents a breakthrough in clinical behavioral health assessment, integrating state-of-the-art audio processing, advanced computer vision, and sophisticated natural language processing technologies. The system operates through a comprehensive multi-LLM architecture that processes real-time physiological, behavioral, and linguistic data streams to deliver evidence-based clinical decision support with unprecedented accuracy and interpretability.";
 
@@ -265,21 +266,28 @@ export default function Subchapter2_1() {
 
   // Always render but control visibility and opacity for scroll detection
 
-  const sectionStyle: React.CSSProperties = {
-    background: '#ffffff',
-    minHeight: '500vh', // Extended height for scroll effect
-    width: '100%',
-    padding: 0,
-    margin: 0,
-    position: 'relative',
-  };
+  const sectionStyle: React.CSSProperties = isMobile
+    ? getMobileSectionStyle('light')
+    : {
+        background: '#ffffff',
+        minHeight: '500vh', // Extended height for scroll effect
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        position: 'relative',
+      };
 
-  const fixedContentStyle: React.CSSProperties = {
+  const fixedContentStyle: React.CSSProperties = isMobile ? {
+    ...getMobileSectionStyle('light'),
+    position: 'static', // Remove sticky on mobile
+    minHeight: 'auto', // Remove fixed height on mobile
+    height: 'auto'
+  } : {
     position: 'sticky',
     top: 0,
     width: '100%',
     height: '100vh',
-    padding: isMobile ? '60px 16px' : '120px 40px 40px 60px',
+    padding: '120px 40px 40px 60px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -288,40 +296,53 @@ export default function Subchapter2_1() {
     background: '#ffffff',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 32 : 48,
-    fontWeight: 700,
-    color: '#000000',
-    margin: 0,
-    marginBottom: isMobile ? 24 : 32,
-    lineHeight: 1.1,
-    textTransform: 'uppercase',
-    letterSpacing: -0.02,
-  };
+  const headlineStyle: React.CSSProperties = isMobile 
+    ? getMobileTypography('headline', 'light')
+    : {
+        fontSize: 48,
+        fontWeight: 700,
+        color: '#000000',
+        margin: 0,
+        marginBottom: 32,
+        lineHeight: 1.1,
+        textTransform: 'uppercase',
+        letterSpacing: -0.02,
+      };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18,
-    lineHeight: 1.6,
-    color: '#333333',
-    margin: 0,
-    marginBottom: isMobile ? 32 : 48,
-    fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 800,
-  };
+  const paraStyle: React.CSSProperties = isMobile
+    ? { ...getMobileTypography('body', 'light'), color: '#666666' }
+    : {
+        fontSize: 18,
+        lineHeight: 1.6,
+        color: '#333333',
+        margin: 0,
+        marginBottom: 48,
+        fontWeight: 400,
+        maxWidth: 800,
+      };
 
-  const cardContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: isMobile ? 20 : 32,
-    marginBottom: isMobile ? 32 : 48,
-    width: isMobile ? '100%' : '800px',
-    minHeight: isMobile ? '180px' : '200px',
-    background: '#f7f7f7',
-    padding: isMobile ? '32px 24px' : '40px 48px',
-    borderRadius: isMobile ? 12 : 16,
-    margin: '0 auto',
-  };
+  const cardContainerStyle: React.CSSProperties = isMobile
+    ? {
+        ...getMobileCardStyle('light'),
+        display: 'flex',
+        flexDirection: 'column', // Stack vertically on mobile
+        gap: 12,
+        marginBottom: 24,
+        background: '#f7f7f7'
+      }
+    : {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: 32,
+        marginBottom: 48,
+        width: '800px',
+        minHeight: '200px',
+        background: '#f7f7f7',
+        padding: '40px 48px',
+        borderRadius: 16,
+        margin: '0 auto',
+      };
 
   const iconContainerStyle: React.CSSProperties = {
     flexShrink: 0,

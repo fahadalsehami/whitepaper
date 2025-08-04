@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
 import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -221,6 +222,14 @@ export default function Subchapter2_4() {
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
+    // Check mobile status safely - skip complex animations on mobile
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    if (checkMobile) {
+      // On mobile: no ScrollTrigger, no pinning, allow natural scroll
+      return;
+    }
+
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
@@ -291,6 +300,29 @@ export default function Subchapter2_4() {
   
   // Separate Right Cube Component  
   const RightCube = ({ progress }: { progress: number }) => {
+    const [mounted, setMounted] = useState(false);
+    
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+    
+    if (!mounted) {
+      // Render with static position to prevent hydration mismatch
+      return (
+        <div style={{
+          position: 'absolute',
+          left: '1500px', // Off-screen position
+          top: '40%',
+          transform: 'translateY(-50%) scale(0.1) rotate(0deg)',
+          transition: 'none'
+        }}>
+          <svg width="267" height="321" viewBox="0 0 267 321" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M126.222 164.304V306.866L7.94336 235.845V93.2812L126.222 164.304ZM259.5 235.844L141.222 306.866V164.304L259.5 93.2812V235.844ZM252.43 80.0293L133.721 151.312L15.0127 80.0293L133.722 8.74707L252.43 80.0293Z" fill="black" stroke="#FEFFFA" strokeWidth="15"/>
+          </svg>
+        </div>
+      );
+    }
+    
     const totalProgress = progress * PHYSIOLOGY_POINTS.length;
     const rightCubePhase = Math.max(0, Math.min(1, (totalProgress - 1) * 2)); // Starts after left cube completes
     
@@ -344,25 +376,32 @@ export default function Subchapter2_4() {
     };
     
     return (
-      <div style={{
+      <div style={isMobile ? {
+        ...getMobileCardStyle('light'),
+        background: '#f7f7f7',
+        display: showCard ? 'flex' : 'none', // Show/hide cards on mobile
+        flexDirection: 'column',
+        marginBottom: 12,
+        position: 'static' // Remove absolute positioning on mobile
+      } : {
         position: 'absolute',
-        top: cardPosition.top, // Same position for all cards
-        left: cardPosition.left, // Moved toward left near center
-        width: isMobile ? 320 : 480, // Increased width size
-        minWidth: isMobile ? 320 : 480, // Increased min-width
-        background: '#f7f7f7', // Light gray background like subchapter 2.2
+        top: cardPosition.top,
+        left: cardPosition.left,
+        width: 480,
+        minWidth: 480,
+        background: '#f7f7f7',
         border: 'none',
-        borderRadius: 0, // No rounded corners
-        padding: isMobile ? '24px 20px 20px 24px' : '32px 40px 24px 40px', // Match subchapter 2.2 padding
+        borderRadius: 0,
+        padding: '32px 40px 24px 40px',
         color: '#000000',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        minHeight: isMobile ? 220 : 270, // Match subchapter 2.2 height
+        minHeight: 270,
         position: 'absolute',
         opacity: fadeOpacity,
-        transition: showCard ? 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.2s ease-out', // Only opacity transition
+        transition: showCard ? 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'opacity 0.2s ease-out',
         zIndex: 10 - index,
         boxShadow: showCard ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
       }}>
@@ -374,12 +413,14 @@ export default function Subchapter2_4() {
           marginBottom: isMobile ? 16 : 20,
           width: '100%'
         }}>
-          <div style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
+          <div 
+            className={isMobile ? "mobile-disable-svg-animations" : ""}
+            style={{
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
             {point.icon}
           </div>
           <div style={{
@@ -492,6 +533,14 @@ export default function Subchapter2_4() {
           background: #000000 !important;
           color: white !important;
         }
+        ${isMobile ? `
+        /* Target only card icons SVG animations on mobile */
+        .mobile-disable-svg-animations svg * {
+          animation: none !important;
+          animation-duration: 0s !important;
+          animation-play-state: paused !important;
+        }
+        ` : ''}
       `}</style>
       
       <section id="quality-4" ref={sectionRef} style={{
@@ -528,16 +577,61 @@ export default function Subchapter2_4() {
                 <RightCube progress={scrollProgress} />
               </div>
               
-              {/* Extended cards - only show current card */}
-              {PHYSIOLOGY_POINTS.map((point, index) => (
-                <ExtendedCard
-                  key={index}
-                  point={point}
-                  index={index}
-                  isVisible={true}
-                  progress={scrollProgress}
-                />
-              ))}
+              {/* Extended cards - mobile shows all, desktop shows current only */}
+              {isMobile ? (
+                // Mobile: Show all cards in vertical stack
+                PHYSIOLOGY_POINTS.map((point, index) => (
+                  <div key={index} style={{
+                    ...getMobileCardStyle('light'),
+                    background: '#f7f7f7',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: 12
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      marginBottom: 16,
+                      width: '100%'
+                    }}>
+                      <div 
+                        className={isMobile ? "mobile-disable-svg-animations" : ""}
+                        style={{
+                          flexShrink: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                        {point.icon}
+                      </div>
+                      <div style={{
+                        ...getMobileTypography('title', 'light'),
+                        flex: 1
+                      }}>
+                        {point.title}
+                      </div>
+                    </div>
+                    <div style={{
+                      ...getMobileTypography('body', 'light'),
+                      color: '#666666'
+                    }}>
+                      {point.content}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                // Desktop: Show animated cards
+                PHYSIOLOGY_POINTS.map((point, index) => (
+                  <ExtendedCard
+                    key={index}
+                    point={point}
+                    index={index}
+                    isVisible={true}
+                    progress={scrollProgress}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScroll } from '../../../context/ScrollContext';
+import { useHeroDarkMode } from '../../../context/HeroDarkModeContext';
+import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '../../../utils/mobileUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -112,9 +114,17 @@ export default function Subchapter1_3() {
   const leftGridRef = useRef<HTMLDivElement>(null);
   const rightGridRef = useRef<HTMLDivElement>(null);
   const { currentSubchapter } = useScroll();
+  const { setDarkMode } = useHeroDarkMode();
   
   // Only show content when we transition to subchapter 1.3
   const isActive = currentSubchapter === '1.3';
+
+  // Set dark theme when this subchapter is active
+  useEffect(() => {
+    if (isActive) {
+      setDarkMode(true);
+    }
+  }, [isActive, setDarkMode]);
 
   // State for selected left grid item
   const [selectedItem, setSelectedItem] = useState<string>("Real-Time Processing");
@@ -152,6 +162,15 @@ export default function Subchapter1_3() {
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
+    // Check mobile status safely
+    const checkMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+    
+    // Skip complex animations on mobile
+    if (checkMobile) {
+      // Static content positioning for mobile
+      return;
+    }
+
     // 🎯 PIN SECTION DURING SCROLL - optimized for smooth transition to 2.1
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -168,12 +187,19 @@ export default function Subchapter1_3() {
   }, [isActive]);
 
   // 📱 RESPONSIVE STYLES
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle: React.CSSProperties = isMobile ? {
+    ...getMobileSectionStyle('dark'),
+    minHeight: 'auto', // Remove fixed viewport heights on mobile
+    padding: '40px 16px' // Mobile-optimized padding
+  } : {
     background: '#000',
-    minHeight: '100vh', // Standard height for pinned section
+    minHeight: '100vh',
     width: '100%',
     padding: 0,
-    margin: 0,
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 0,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -183,47 +209,63 @@ export default function Subchapter1_3() {
   const contentStyle: React.CSSProperties = {
     width: '100%',
     maxWidth: isMobile ? '100%' : 1400,
-    margin: '0 auto',
-    padding: isMobile ? '60px 20px 40px 20px' : '120px 32px 40px 0', // Reduced top padding for more space
+    marginTop: 0,
+    marginRight: 'auto',
+    marginBottom: 0,
+    marginLeft: 'auto',
+    padding: isMobile ? '20px 16px 40px 16px' : '120px 32px 40px 0', // Reduced mobile padding
     position: 'relative',
-    minHeight: '100vh',
+    minHeight: isMobile ? 'auto' : '100vh', // Remove fixed height on mobile
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   };
   
-  const headlineStyle: React.CSSProperties = {
-    fontSize: isMobile ? 28 : 42, // Slightly smaller to save space
+  const headlineStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('headline', 'dark'),
+    fontSize: '24px', // Mobile-optimized headline
+    textTransform: 'none' // Remove text transform on mobile
+  } : {
+    fontSize: 42,
     fontWeight: 700,
     color: '#fff',
-    margin: 0,
-    marginBottom: isMobile ? 16 : 24, // Reduced margin
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 24,
+    marginLeft: 0,
     lineHeight: 1.1,
     textTransform: 'uppercase',
     letterSpacing: -0.02,
   };
   
-  const paraStyle: React.CSSProperties = {
-    fontSize: isMobile ? 14 : 16, // Slightly smaller to save space
-    lineHeight: 1.6, // Tighter line height
+  const paraStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('body', 'dark'),
+    fontSize: '14px', // Mobile-optimized body text
+    lineHeight: 1.5, // Better mobile readability
+    maxWidth: '100%'
+  } : {
+    fontSize: 16,
+    lineHeight: 1.6,
     color: '#eaeaea',
-    margin: 0,
-    marginBottom: isMobile ? 24 : 32, // Reduced margin
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 32,
+    marginLeft: 0,
     fontWeight: 400,
-    maxWidth: isMobile ? '100%' : 600,
+    maxWidth: 600,
   };
 
   // 📱 TWO-COLUMN GRID LAYOUT
   const gridsContainerStyle: React.CSSProperties = {
     width: '100%',
     maxWidth: isMobile ? '100%' : '1290px',
-    marginTop: isMobile ? 20 : 32, // Reduced margin
+    marginTop: isMobile ? 16 : 32,
     display: 'grid',
-    gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', // Mobile: single column, Desktop: 1:2 ratio
-    gap: isMobile ? 24 : 48, // Reduced gap to save space
+    gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr', // Single column layout on mobile
+    gap: isMobile ? 16 : 48, // Reduced gap for mobile
     position: 'relative',
-    alignItems: 'start', // Align to start to use available space efficiently
+    alignItems: 'start',
   };
 
   // LEFT GRID STYLES - Card-based design
@@ -235,36 +277,53 @@ export default function Subchapter1_3() {
     overflowY: isMobile ? 'visible' : 'auto', // Allow scrolling if needed on desktop
   };
 
-  const getLeftCardStyle = (isSelected: boolean): React.CSSProperties => ({
+  const getLeftCardStyle = (isSelected: boolean): React.CSSProperties => isMobile ? {
+    ...getMobileCardStyle('dark'),
     background: '#000',
     border: isSelected ? '2px solid rgba(255, 255, 255, 0.8)' : 'none',
-    borderRadius: isSelected ? 0 : (isMobile ? 8 : 12), // Smaller radius
-    padding: isMobile ? '16px' : '20px', // Reduced padding
+    borderRadius: 0, // Minimalistic sharp corners for mobile
+    cursor: 'pointer',
+    transition: 'none', // Remove transitions on mobile
+    minHeight: isSelected ? 100 : 'auto',
+    flex: '0 0 auto',
+  } : {
+    background: '#000',
+    border: isSelected ? '2px solid rgba(255, 255, 255, 0.8)' : 'none',
+    borderRadius: isSelected ? 0 : 12,
+    padding: '20px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    minHeight: isSelected ? (isMobile ? 100 : 120) : 'auto', // Reduced min height
-    flex: '0 0 auto', // Prevent flex growth
-  });
+    minHeight: isSelected ? 120 : 'auto',
+    flex: '0 0 auto',
+  };
 
-  const leftCardTitleStyle: React.CSSProperties = {
-    fontSize: isMobile ? 16 : 18, // Smaller font
+  const leftCardTitleStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('title', 'dark'),
+    fontSize: '16px', // Mobile-optimized title
+    marginBottom: 0
+  } : {
+    fontSize: 18,
     fontWeight: 600,
     color: '#fff',
-    lineHeight: 1.2, // Tighter line height
+    lineHeight: 1.2,
     marginBottom: 0,
   };
 
   const getLeftCardTitleOpacity = (isSelected: boolean): React.CSSProperties => ({
     ...leftCardTitleStyle,
     opacity: isSelected ? 1 : 0.5,
-    marginBottom: isSelected ? (isMobile ? 8 : 12) : 0, // Reduced margin
+    marginBottom: isSelected ? (isMobile ? 8 : 12) : 0,
   });
 
-  const leftCardSummaryStyle: React.CSSProperties = {
-    fontSize: isMobile ? 12 : 14, // Smaller font
+  const leftCardSummaryStyle: React.CSSProperties = isMobile ? {
+    ...getMobileTypography('caption', 'dark'),
+    fontSize: '12px', // Mobile-optimized caption
+    fontStyle: 'italic'
+  } : {
+    fontSize: 14,
     fontWeight: 400,
     color: '#ccc',
-    lineHeight: 1.4, // Tighter line height
+    lineHeight: 1.4,
     fontStyle: 'italic',
   };
 

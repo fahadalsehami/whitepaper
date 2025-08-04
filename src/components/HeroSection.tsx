@@ -1,8 +1,9 @@
 "use client";
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useHeroDarkMode } from '../context/HeroDarkModeContext';
+import { isMobileDevice, getMobileTypography, getMobileSectionStyle } from '../utils/mobileUtils';
 gsap.registerPlugin(ScrollTrigger);
 
 const LOGO_WIDTH = 400;
@@ -14,6 +15,20 @@ export default function HeroSection() {
   const rightMergeRef = useRef<SVGSVGElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { setDarkMode, darkMode } = useHeroDarkMode();
+  
+  // Mobile detection state
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     console.log('HeroSection useEffect running');
@@ -24,9 +39,27 @@ export default function HeroSection() {
       return;
     }
 
-    // Set initial positions - SVGs start completely off-screen
+    // Skip animations on mobile - hide SVGs completely for minimalistic design
+    if (isMobile) {
+      console.log('Mobile detected - hiding SVGs, showing static content only');
+      gsap.set(leftMergeRef.current, { 
+        opacity: 0,
+        visibility: 'hidden'
+      });
+      gsap.set(rightMergeRef.current, { 
+        opacity: 0,
+        visibility: 'hidden'
+      });
+      gsap.set(contentRef.current, {
+        opacity: 1
+      });
+      setDarkMode(false); // Default to light theme on mobile
+      return;
+    }
+
+    // Desktop animation logic
     console.log('Setting initial positions');
-    const viewportWidth = window.innerWidth;
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
     
     gsap.set(leftMergeRef.current, { 
       x: -viewportWidth - LOGO_WIDTH,
@@ -73,10 +106,10 @@ export default function HeroSection() {
         
         // Animate SVGs based on progress
         if (leftMergeRef.current && rightMergeRef.current) {
-          // Animate SVGs to center
-          const centerX = 0;
-          const currentLeftX = (-viewportWidth - LOGO_WIDTH) + (centerX - (-viewportWidth - LOGO_WIDTH)) * progress;
-          const currentRightX = (viewportWidth + LOGO_WIDTH) + (centerX - (viewportWidth + LOGO_WIDTH)) * progress;
+          // Animate SVGs to left side of viewport
+          const leftSideX = -viewportWidth * 0.3; // Position at 30% from left edge
+          const currentLeftX = (-viewportWidth - LOGO_WIDTH) + (leftSideX - (-viewportWidth - LOGO_WIDTH)) * progress;
+          const currentRightX = (viewportWidth + LOGO_WIDTH) + (leftSideX - (viewportWidth + LOGO_WIDTH)) * progress;
           
           gsap.set(leftMergeRef.current, {
             x: currentLeftX,
@@ -107,38 +140,58 @@ export default function HeroSection() {
       console.log('Cleaning up Hero GSAP');
       st.kill();
     };
-  }, [setDarkMode]);
+  }, [setDarkMode, isMobile]);
+
+  // Mobile-optimized container styles
+  const containerStyle: React.CSSProperties = {
+    minHeight: isMobile ? 'auto' : '100vh',
+    background: darkMode ? '#000000' : '#ffffff',
+    position: 'relative',
+    zIndex: 2,
+    transition: isMobile ? 'none' : 'background 0.7s cubic-bezier(0.4,0,0.2,1)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: isMobile ? '80px' : '100px',
+    paddingBottom: isMobile ? '40px' : '0px',
+    paddingLeft: isMobile ? '16px' : '0px',
+    paddingRight: isMobile ? '16px' : '0px',
+  };
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        minHeight: '100vh',
-        background: darkMode ? '#000000' : '#ffffff',
-        position: 'relative',
-        zIndex: 2,
-        transition: 'background 0.7s cubic-bezier(0.4,0,0.2,1)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: '100px',
-      }}
-    >
-      {/* SVG Logo Container */}
-      <div style={{ 
-        width: LOGO_WIDTH, 
-        height: LOGO_HEIGHT, 
-        position: 'relative', 
-        overflow: 'visible', 
-        zIndex: 10,
-        background: 'transparent',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: '80px',
-        marginTop: '0',
-      }}>
+    <>
+      <style jsx>{`
+        ${isMobile ? `
+        /* Hide SVG container completely on mobile */
+        .hero-svg-container {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+        }
+        ` : ''}
+      `}</style>
+      
+      <div
+        ref={containerRef}
+        style={containerStyle}
+      >
+        {/* SVG Logo Container - Hidden on mobile */}
+        <div 
+          className={isMobile ? "hero-svg-container" : ""}
+          style={{ 
+            width: isMobile ? 0 : LOGO_WIDTH,
+            height: isMobile ? 0 : LOGO_HEIGHT, 
+            position: 'relative', 
+            overflow: 'visible', 
+            zIndex: 10,
+            background: 'transparent',
+            display: isMobile ? 'none' : 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: isMobile ? '0' : '80px',
+            marginTop: '0',
+          }}>
         {/* Left SVG */}
         <svg 
           ref={leftMergeRef} 
@@ -187,40 +240,44 @@ export default function HeroSection() {
         ref={contentRef}
         style={{
           width: '100%',
-          maxWidth: 1200,
-          padding: '0 32px',
+          maxWidth: isMobile ? '100%' : 1200,
+          padding: isMobile ? '0' : '0 32px',
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: isMobile ? 'center' : 'space-between',
           alignItems: 'flex-start',
           color: darkMode ? '#ffffff' : '#000000',
-          transition: 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+          transition: isMobile ? 'none' : 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+          textAlign: isMobile ? 'center' : 'left',
         }}
       >
         <div style={{ flex: 1 }}>
           <h1 style={{
-            fontSize: '48px',
+            fontSize: isMobile ? '24px' : '48px',
             fontWeight: 700,
             margin: '0 0 16px 0',
-            lineHeight: 1.1,
+            lineHeight: 1.2,
             color: 'inherit',
-            transition: 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+            transition: isMobile ? 'none' : 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+            textTransform: isMobile ? 'none' : 'uppercase',
           }}>
             RESEARCH AI Pioneer in Mental Health
           </h1>
           <div style={{
             display: 'flex',
-            gap: '32px',
-            fontSize: '16px',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '8px' : '32px',
+            fontSize: isMobile ? '12px' : '16px',
             color: 'inherit',
             opacity: 0.8,
-            transition: 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+            transition: isMobile ? 'none' : 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
           }}>
             <span>WRITTEN BY Fahad Alsehami</span>
-            <span>PUBLISHED June 2024</span>
-            <span>LAST UPDATED June 2024</span>
+            <span>PUBLISHED August 2025</span>
+            <span>LAST UPDATED August 2025</span>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 } 
