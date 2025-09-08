@@ -13,7 +13,7 @@ const FINAL_STATEMENT = "This work fundamentally transforms the landscape of men
 const IMPACT_AREAS = [
   {
     title: "Research Significance",
-    content: "This represents the largest and most comprehensive validation of multi-modal AI in mental health, with implications extending far beyond behavioral health to the entire spectrum of AI-assisted medical practice.",
+    content: "This represents the largest and most comprehensive validation of multi-modal AI in mental health, with implications extending far beyond behavioral health to the entire spectrum of AI-assisted medical practice",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9 11H15M9 15H15M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H12L19 10V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" 
@@ -24,7 +24,7 @@ const IMPACT_AREAS = [
   },
   {
     title: "Clinical Legacy",
-    content: "The establishment of evidence-based protocols for AI-human collaboration in healthcare settings, ensuring that technological advancement enhances rather than replaces the fundamental human elements of medical care.",
+    content: "The establishment of evidence-based protocols for AI-human collaboration in healthcare settings, ensuring that technological advancement enhances rather than replaces the fundamental human elements of medical care",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 6V12L16 14M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" 
@@ -34,7 +34,7 @@ const IMPACT_AREAS = [
   },
   {
     title: "Global Health Impact",
-    content: "The creation of scalable solutions that can address the worldwide mental health crisis through accessible, accurate, and culturally sensitive AI-driven assessment and intervention tools.",
+    content: "The creation of scalable solutions that can address the worldwide mental health crisis through accessible, accurate, and culturally sensitive AI-driven assessment and intervention tools",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="10" stroke="#000000" strokeWidth="2"/>

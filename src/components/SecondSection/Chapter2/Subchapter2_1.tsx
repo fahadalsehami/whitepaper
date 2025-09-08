@@ -435,7 +435,7 @@ export default function Subchapter2_1() {
           <div style={{ height: isMobile ? '24px' : '32px' }} />
 
           <p style={bottomTextStyle}>
-            Our audio capture system achieves clinical-grade fidelity through advanced signal processing architectures, enabling precise extraction of voice biomarkers and prosodic features essential for physiological assessment and emotional state detection.
+            Our audio capture system achieves clinical-grade fidelity through advanced signal processing architectures, enabling precise extraction of voice biomarkers and prosodic features essential for physiological assessment and emotional state detection
           </p>
         </div>
       </section>

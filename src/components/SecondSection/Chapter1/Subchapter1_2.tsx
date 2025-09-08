@@ -13,7 +13,7 @@ const SUPPORT_TEXT = "Current mental health assessment approaches face fundament
 const CARDS = [
   { 
     title: "Subjective Reporting Bias",
-    summary: "Traditional assessments rely heavily on patient self-reporting, affected by social desirability bias (65% under-report symptoms), memory recall limitations, cultural stigma, and limited emotional vocabulary.",
+    summary: "Traditional assessments rely heavily on patient self-reporting, affected by social desirability bias (65% under-report symptoms), memory recall limitations, cultural stigma, and limited emotional vocabulary",
     icon: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="20" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="2" fill="none"/>
@@ -25,7 +25,7 @@ const CARDS = [
   },
   { 
     title: "Clinical Time Constraints",
-    summary: "Average clinical session duration is 15-20 minutes with only 30-40% allocated for assessment, plus 2-3 hours documentation burden per hour of patient care, limited by provider shortages.",
+    summary: "Average clinical session duration is 15-20 minutes with only 30-40% allocated for assessment, plus 2-3 hours documentation burden per hour of patient care, limited by provider shortages",
     icon: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="20" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="2" fill="none"/>
@@ -36,7 +36,7 @@ const CARDS = [
   },
   { 
     title: "Lack of Objective Biomarkers",
-    summary: "Current screening relies on subjective questionnaires (PHQ-9, GAD-7) with no integration of physiological indicators, missing behavioral pattern analysis, and absence of real-time emotional monitoring.",
+    summary: "Current screening relies on subjective questionnaires (PHQ-9, GAD-7) with no integration of physiological indicators, missing behavioral pattern analysis, and absence of real-time emotional monitoring",
     icon: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="20" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="2" fill="none"/>
@@ -48,7 +48,7 @@ const CARDS = [
   },
   { 
     title: "Inter-rater Reliability Issues",
-    summary: "Clinical assessment consistency varies 65-75% between providers, diagnostic agreement 70-80% for depression, risk assessment variability ±30%, and treatment recommendation concordance only 60-70%.",
+    summary: "Clinical assessment consistency varies 65-75% between providers, diagnostic agreement 70-80% for depression, risk assessment variability ±30%, and treatment recommendation concordance only 60-70%",
     icon: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="20" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="2" fill="none"/>
@@ -59,7 +59,7 @@ const CARDS = [
   },
   { 
     title: "Technological Gap",
-    summary: "Despite AI advances, mental health assessment remains unchanged from decades-old practices, lacking real-time multi-modal data integration, objective assessment tools, scalable solutions, and crisis prediction capabilities.",
+    summary: "Despite AI advances, mental health assessment remains unchanged from decades-old practices, lacking real-time multi-modal data integration, objective assessment tools, scalable solutions, and crisis prediction capabilities",
     icon: (
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
         <circle cx="24" cy="24" r="20" stroke="rgba(255, 255, 255, 0.8)" strokeWidth="2" fill="none"/>

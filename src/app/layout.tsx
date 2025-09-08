@@ -3,7 +3,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { HeroDarkModeProvider } from "../context/HeroDarkModeContext";
 import { ScrollProvider } from "@/context/ScrollContext";
-import SiteHeader from "@/components/SiteHeader";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -22,7 +21,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <ScrollProvider>
           <HeroDarkModeProvider>
-            <SiteHeader />
             {children}
           </HeroDarkModeProvider>
         </ScrollProvider>

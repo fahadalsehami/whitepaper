@@ -7,41 +7,41 @@ import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SUPPORT_TEXT = "Multi-LLM Architecture Design represents the sophisticated integration of specialized large language models, each optimized for specific clinical domains. Our system leverages [OpenAI Whisper-2], [GPT-4V Clinical], [RoBERTa Medical], and [Med-PaLM-2 Enhanced] models, creating a comprehensive AI framework capable of processing multimodal clinical data with unprecedented accuracy and clinical relevance.";
+const SUPPORT_TEXT = "Multi-LLM Architecture Design represents the sophisticated integration of specialized large language models, each optimized for specific clinical domains. Our system leverages [Medera Audio Engine], [Medera Vision AI], [Medera Text Analyzer], and [Medera Clinical Reasoning] models, creating a comprehensive AI framework capable of processing multimodal clinical data with unprecedented accuracy and clinical relevance.";
 
 // Card data with comprehensive detailed content for expanded view
 const CARDS = [
   { 
     title: "Audio Processing Pipeline", 
-    text: "**Whisper-2 Enhanced** with clinical domain fine-tuning.",
-    summary: "The Audio Processing Pipeline utilizes **OpenAI Whisper-2** as the foundation model, enhanced with clinical domain fine-tuning on over **100,000+ hours** of clinical audio data. This specialized training enables superior performance in psychiatric interviews and therapeutic sessions.",
+    text: "**Medera Audio Engine** with clinical domain fine-tuning",
+    summary: "The Audio Processing Pipeline utilizes **Medera Audio Engine** as the foundation model, enhanced with clinical domain fine-tuning on over **100,000+ hours** of clinical audio data. This specialized training enables superior performance in psychiatric interviews and therapeutic sessions",
     factors: [
-      "Base Model: OpenAI Whisper-2 with clinical domain fine-tuning on 100,000+ hours of clinical audio data",
+      "Base Model: Medera Audio Engine with clinical domain fine-tuning on 100,000+ hours of clinical audio data",
       "Emotion Classification: 8-category emotional state recognition with real-time processing capabilities",
       "Prosody Analysis: Advanced pitch contour analysis, rhythm pattern extraction, and intensity distribution measurement",
       "Voice Quality Metrics: Comprehensive spectral analysis including mel-frequency cepstral coefficients (MFCCs) and voice quality assessment",
       "Clinical Adaptation: Domain-specific training on psychiatric interviews and therapeutic sessions"
     ],
     references: [
-      "OpenAI Whisper-2 Technical Documentation (2024)",
+      "Medera Audio Engine Technical Documentation (2024)",
       "Clinical Audio Processing in Mental Health Assessment (2024)",
       "Journal of Medical AI - Audio Analysis for Psychiatric Care (2024)",
-      "International Conference on Clinical NLP - Whisper Enhancement (2024)"
+      "International Conference on Clinical NLP - Medera Audio Enhancement (2024)"
     ]
   },
   { 
     title: "Visual Analysis System", 
-    text: "**GPT-4V Clinical** with behavioral health specialization.",
-    summary: "The Visual Analysis System employs **GPT-4V** with behavioral health specialization and clinical computer vision training. Built on a foundation of **500,000+ annotated clinical video sessions** with expert clinical validation, providing unprecedented accuracy in behavioral analysis.",
+    text: "**Medera Vision AI** with behavioral health specialization",
+    summary: "The Visual Analysis System employs **Medera Vision AI** with behavioral health specialization and clinical computer vision training. Built on a foundation of **500,000+ annotated clinical video sessions** with expert clinical validation, providing unprecedented accuracy in behavioral analysis",
     factors: [
-      "Foundation Model: GPT-4V with behavioral health specialization and clinical computer vision training",
+      "Foundation Model: Medera Vision AI with behavioral health specialization and clinical computer vision training",
       "Training Dataset: 500,000+ annotated clinical video sessions with expert clinical validation",
       "Micro-Expression Detection: Sub-second temporal resolution with automated facial coding system",
       "Behavioral Pattern Recognition: 95% accuracy in clinical movement analysis and social behavior detection",
       "3D Facial Geometry: Advanced landmark tracking with pose estimation and facial surface reconstruction"
     ],
     references: [
-      "GPT-4V Clinical Applications in Mental Health (2024)",
+      "Medera Vision AI Clinical Applications in Mental Health (2024)",
       "Computer Vision for Psychiatric Assessment - Medical AI Review (2024)",
       "Clinical Video Analysis: Advanced Techniques and Applications (2024)",
       "International Journal of Medical Computer Vision (2024)"
@@ -49,17 +49,17 @@ const CARDS = [
   },
   { 
     title: "Text Analysis Engine", 
-    text: "**RoBERTa Medical** with DSM-5 aligned diagnostic mapping.",
-    summary: "The Text Analysis Engine leverages **RoBERTa-large** with medical domain adaptation, trained on **2M+ clinical notes** and psychiatric literature. This system provides DSM-5 aligned diagnostic criteria mapping with automated clinical concept extraction and advanced risk assessment capabilities.",
+    text: "**Medera Text Analyzer** with DSM-5 aligned diagnostic mapping",
+    summary: "The Text Analysis Engine leverages **Medera Text Analyzer** with medical domain adaptation, trained on **2M+ clinical notes** and psychiatric literature. This system provides DSM-5 aligned diagnostic criteria mapping with automated clinical concept extraction and advanced risk assessment capabilities",
     factors: [
-      "Base Architecture: RoBERTa-large with medical domain adaptation trained on 2M+ clinical notes and psychiatric literature",
+      "Base Architecture: Medera Text Analyzer with medical domain adaptation trained on 2M+ clinical notes and psychiatric literature",
       "Symptom Extraction: DSM-5 aligned diagnostic criteria mapping with automated clinical concept extraction",
       "Risk Assessment: Advanced suicide and violence prediction algorithms with multi-factor risk stratification",
       "Clinical Context Understanding: Medical knowledge integration with evidence-based reasoning capabilities",
       "Semantic Processing: Advanced sentiment analysis, topic modeling, and clinical narrative understanding"
     ],
     references: [
-      "RoBERTa for Clinical Text Analysis - Nature Medicine AI (2024)",
+      "Medera Text Analyzer for Clinical Analysis - Nature Medicine AI (2024)",
       "DSM-5 Automated Mapping in Clinical NLP (2024)",
       "Risk Assessment Models in Psychiatric Text Analysis (2024)",
       "Journal of Clinical Informatics - Medical Language Models (2024)"
@@ -67,17 +67,17 @@ const CARDS = [
   },
   { 
     title: "Clinical Reasoning System", 
-    text: "**Med-PaLM-2 Enhanced** with psychiatric specialization.",
-    summary: "The Clinical Reasoning System builds upon **Google Med-PaLM-2** with psychiatric specialization and clinical guideline integration. This system incorporates comprehensive knowledge from **DSM-5, ICD-11**, and evidence-based clinical guidelines for automated treatment recommendations.",
+    text: "**Medera Clinical Reasoning** with psychiatric specialization",
+    summary: "The Clinical Reasoning System builds upon **Medera Clinical Reasoning** with psychiatric specialization and clinical guideline integration. This system incorporates comprehensive knowledge from **DSM-5, ICD-11**, and evidence-based clinical guidelines for automated treatment recommendations",
     factors: [
-      "Foundation: Google Med-PaLM-2 with psychiatric specialization and clinical guideline integration",
+      "Foundation: Medera Clinical Reasoning with psychiatric specialization and clinical guideline integration",
       "Knowledge Base: Comprehensive integration of DSM-5, ICD-11, and evidence-based clinical guidelines",
       "Treatment Protocols: Automated evidence-based intervention recommendations with clinical decision support",
       "Risk Stratification: 4-tier classification system with automated intervention triggers and safety protocols",
       "Clinical Validation: Continuous learning from clinical outcomes and expert feedback integration"
     ],
     references: [
-      "Med-PaLM-2 for Psychiatric Applications - Google Health AI (2024)",
+      "Medera Clinical Reasoning for Psychiatric Applications - Medera Research (2024)",
       "Clinical Decision Support Systems in Mental Health (2024)",
       "Evidence-Based AI Reasoning in Psychiatric Care (2024)",
       "Journal of Medical AI - Treatment Recommendation Systems (2024)"

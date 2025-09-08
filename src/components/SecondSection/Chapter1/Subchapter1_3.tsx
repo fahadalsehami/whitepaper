@@ -7,12 +7,12 @@ import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SUPPORT_TEXT = "To develop and clinically validate a comprehensive multi-modal agentic AI system that revolutionizes behavioral health assessment through real-time integration of audio, visual, textual, and clinical contextual data, achieving superior accuracy and efficiency compared to traditional screening methodologies.";
+const SUPPORT_TEXT = "To develop and clinically validate a comprehensive multi-modal agentic AI system that revolutionizes behavioral health assessment through real-time integration of audio, visual, textual, and clinical contextual data, achieving superior accuracy and efficiency compared to traditional screening methodologies";
 
 // Left grid cards and their corresponding comparison table data
 const GRID_DATA = {
   "Real-Time Processing": {
-    summary: "Our system transforms mental health assessment from hour-long manual processes to rapid automated evaluations, enabling continuous patient monitoring rather than episodic care.",
+    summary: "Our system transforms mental health assessment from hour-long manual processes to rapid automated evaluations, enabling continuous patient monitoring rather than episodic care",
     tableHeaders: ["", "PROCESSING TIME", "IMPROVEMENT"],
     tableData: [
       {
@@ -36,7 +36,7 @@ const GRID_DATA = {
     ]
   },
   "Accuracy Enhancement": {
-    summary: "Specialized behavioral health focus with simultaneous audio-visual-text processing significantly outperforms general-purpose and EHR-focused models in psychiatric assessment accuracy.",
+    summary: "Specialized behavioral health focus with simultaneous audio-visual-text processing significantly outperforms general-purpose and EHR-focused models in psychiatric assessment accuracy",
     tableHeaders: ["", "SENSITIVITY RATE", "IMPROVEMENT"],
     tableData: [
       {
@@ -46,13 +46,13 @@ const GRID_DATA = {
         isOurSystem: true
       },
       {
-        name: "OPENAI GPT-4V HEALTHCARE",
+        name: "MEDERA VISION AI HEALTHCARE",
         metric: "65-75%",
         improvement: "",
         isOurSystem: false
       },
       {
-        name: "IBM WATSON HEALTH MENTAL",
+        name: "COMPETITOR AI MENTAL HEALTH",
         metric: "70-78%",
         improvement: "",
         isOurSystem: false
@@ -60,7 +60,7 @@ const GRID_DATA = {
     ]
   },
   "Comprehensive Data Integration": {
-    summary: "Simultaneous processing of prosodic audio cues, facial micro-expressions, behavioral patterns, and clinical context provides holistic patient assessment beyond single-modality approaches.",
+    summary: "Simultaneous processing of prosodic audio cues, facial micro-expressions, behavioral patterns, and clinical context provides holistic patient assessment beyond single-modality approaches",
     tableHeaders: ["", "DATA MODALITIES", "IMPROVEMENT"],
     tableData: [
       {
@@ -84,7 +84,7 @@ const GRID_DATA = {
     ]
   },
   "Crisis Detection Capability": {
-    summary: "Continuous monitoring with predictive analytics enables intervention before crisis points, potentially preventing suicide attempts and psychiatric emergencies rather than reactive documentation.",
+    summary: "Continuous monitoring with predictive analytics enables intervention before crisis points, potentially preventing suicide attempts and psychiatric emergencies rather than reactive documentation",
     tableHeaders: ["", "DETECTION SPEED", "IMPROVEMENT"],
     tableData: [
       {
@@ -126,7 +126,7 @@ export default function Subchapter1_3() {
     }
   }, [isActive, setDarkMode]);
 
-  // State for selected left grid item
+  // State for selected left grid item and scroll-based animation
   const [selectedItem, setSelectedItem] = useState<string>("Real-Time Processing");
 
   // 🔧 RESPONSIVE DETECTION
@@ -158,7 +158,7 @@ export default function Subchapter1_3() {
     });
   };
 
-  // ScrollTrigger animation with pin - optimized for smooth transition to 2.1
+  // Scroll-based card animation - every 2 scroll attempts moves to next card
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
@@ -171,20 +171,45 @@ export default function Subchapter1_3() {
       return;
     }
 
-    // 🎯 PIN SECTION DURING SCROLL - optimized for smooth transition to 2.1
+    // Define the card progression order
+    const cardOrder = [
+      "Real-Time Processing",
+      "Accuracy Enhancement", 
+      "Comprehensive Data Integration",
+      "Crisis Detection Capability"
+    ];
+
+    // 🎯 SCROLL-BASED CARD ANIMATION with pin
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=1000', // 🔧 Optimized pin distance for smooth transition to 2.1
+      end: '+=2000', // Increased distance for 4 cards with 2 scroll attempts each
       pin: true,
-      // No scrub - allows natural scroll continuation
+      scrub: 1, // Smooth scrubbing for responsive animation
+      onUpdate: (self) => {
+        const progress = self.progress;
+        
+        // Calculate which card should be active based on scroll progress
+        // Each card gets 25% of the scroll (100% / 4 cards = 25%)
+        const cardIndex = Math.min(
+          Math.floor(progress * cardOrder.length), 
+          cardOrder.length - 1
+        );
+        
+        const newSelectedItem = cardOrder[cardIndex];
+        
+        // Only update if different to prevent unnecessary re-renders
+        if (newSelectedItem !== selectedItem) {
+          setSelectedItem(newSelectedItem);
+        }
+      }
     });
 
     return () => {
       scrollTrigger.kill();
     };
 
-  }, [isActive]);
+  }, [isActive, selectedItem]);
 
   // 📱 RESPONSIVE STYLES
   const sectionStyle: React.CSSProperties = isMobile ? {
@@ -429,6 +454,7 @@ export default function Subchapter1_3() {
           {/* Title aligned with 1.3 indicator */}
           <div className="background-pinned-headline" style={headlineStyle}>Objective</div>
           <p className="background-pinned-paragraph" style={paraStyle}>{SUPPORT_TEXT}</p>
+          
           
           {/* Two-column interactive grid system */}
           <div style={gridsContainerStyle}>

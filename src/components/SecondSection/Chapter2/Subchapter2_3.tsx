@@ -13,8 +13,8 @@ const SUPPORT_TEXT = "Text processing infrastructure combines state-of-the-art l
 const CARDS = [
   { 
     title: "Speech-to-Text", 
-    text: "Real-time transcription with **97%** accuracy using clinical-domain adapted Whisper-2 architecture.",
-    summary: "Advanced automatic speech recognition leverages the latest Whisper-2 neural architecture, specifically fine-tuned on clinical conversations and medical terminology. Achieves industry-leading accuracy rates while maintaining real-time processing capabilities essential for clinical workflows.",
+    text: "Real-time transcription with **97%** accuracy using clinical-domain adapted Medera Audio Engine architecture",
+    summary: "Advanced automatic speech recognition leverages the latest Medera Audio Engine neural architecture, specifically fine-tuned on clinical conversations and medical terminology. Achieves industry-leading accuracy rates while maintaining real-time processing capabilities essential for clinical workflows",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
@@ -55,8 +55,8 @@ const CARDS = [
   },
   { 
     title: "Written Input Integration", 
-    text: "Multi-modal text capture from keyboard, touchscreen, and voice input with **seamless data fusion**.",
-    summary: "Comprehensive input integration system supports multiple modalities including traditional keyboard input, modern touchscreen interfaces, and voice dictation. Advanced data fusion algorithms ensure seamless integration across all input methods while maintaining data integrity and user experience consistency.",
+    text: "Multi-modal text capture from keyboard, touchscreen, and voice input with **seamless data fusion**",
+    summary: "Comprehensive input integration system supports multiple modalities including traditional keyboard input, modern touchscreen interfaces, and voice dictation. Advanced data fusion algorithms ensure seamless integration across all input methods while maintaining data integrity and user experience consistency",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
@@ -93,8 +93,8 @@ const CARDS = [
   },
   { 
     title: "Multi-Language Support", 
-    text: "**25+** languages with cultural adaptation and clinical terminology recognition.",
-    summary: "Extensive multilingual capabilities spanning over 25 languages with specialized focus on cultural nuances and region-specific clinical terminology. Each language model is fine-tuned with native clinical datasets to ensure accuracy in medical context understanding and cultural sensitivity in patient interactions.",
+    text: "**25+** languages with cultural adaptation and clinical terminology recognition",
+    summary: "Extensive multilingual capabilities spanning over 25 languages with specialized focus on cultural nuances and region-specific clinical terminology. Each language model is fine-tuned with native clinical datasets to ensure accuracy in medical context understanding and cultural sensitivity in patient interactions",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
@@ -131,8 +131,8 @@ const CARDS = [
   },
   { 
     title: "Clinical Notes Integration", 
-    text: "Advanced **EHR data extraction** using large language models for processing unstructured clinical text.",
-    summary: "Sophisticated integration with Electronic Health Record systems enabling automated extraction and analysis of unstructured clinical documentation. Large language models trained on clinical datasets provide context-aware information extraction while maintaining HIPAA compliance and data security standards.",
+    text: "Advanced **EHR data extraction** using large language models for processing unstructured clinical text",
+    summary: "Sophisticated integration with Electronic Health Record systems enabling automated extraction and analysis of unstructured clinical documentation. Large language models trained on clinical datasets provide context-aware information extraction while maintaining HIPAA compliance and data security standards",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
@@ -171,8 +171,8 @@ const CARDS = [
   },
   { 
     title: "Semantic Analysis", 
-    text: "**RoBERTa-based** medical text processing with clinical domain fine-tuning for symptom extraction.",
-    summary: "State-of-the-art semantic analysis powered by RoBERTa transformer architecture, specifically fine-tuned on medical literature and clinical documentation. Provides advanced symptom extraction, diagnostic support, and clinical context understanding with high precision in medical terminology interpretation.",
+    text: "**Medera Text Analyzer** medical text processing with clinical domain fine-tuning for symptom extraction",
+    summary: "State-of-the-art semantic analysis powered by Medera Text Analyzer transformer architecture, specifically fine-tuned on medical literature and clinical documentation. Provides advanced symptom extraction, diagnostic support, and clinical context understanding with high precision in medical terminology interpretation",
     icon: (
       <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
         <defs>
@@ -209,7 +209,7 @@ const CARDS = [
         <line className="connection" x1="25.5" y1="20" x2="34.5" y2="16" stroke="#333" strokeWidth="1"/>
         <line className="connection" x1="25.5" y1="28" x2="34.5" y2="24" stroke="#333" strokeWidth="1"/>
         <line className="connection" x1="25.5" y1="36" x2="34.5" y2="32" stroke="#333" strokeWidth="1"/>
-        <text x="24" y="46" textAnchor="middle" fontSize="5" fill="#333">RoBERTa neural</text>
+        <text x="24" y="46" textAnchor="middle" fontSize="5" fill="#333">Medera neural</text>
       </svg>
     )
   }

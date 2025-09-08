@@ -14,7 +14,7 @@ const CARDS = [
   { 
     title: "Treatment Gap", 
     text: "Only **25-30%** receive adequate treatment.", // 🔧 BOLD percentage
-    summary: "The mental health treatment gap represents one of the most significant challenges in healthcare delivery. Despite growing awareness of mental health issues, fewer than one-third of individuals with diagnosable mental health conditions receive evidence-based treatment that meets clinical standards.",
+    summary: "The mental health treatment gap represents one of the most significant challenges in healthcare delivery. Despite growing awareness of mental health issues, fewer than one-third of individuals with diagnosable mental health conditions receive evidence-based treatment that meets clinical standards",
     factors: [
       "Geographic barriers: Rural areas have 3-5 times fewer mental health providers per capita",
       "Financial constraints: Even with insurance, out-of-pocket costs average $1,986 annually for mental health treatment", 

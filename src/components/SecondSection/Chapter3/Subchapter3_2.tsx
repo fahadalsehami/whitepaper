@@ -13,8 +13,8 @@ const SUPPORT_TEXT = "Advanced Feature Extraction Methodologies represent the cu
 const CARDS = [
   { 
     title: "Audio Feature Engineering", 
-    text: "**Spectral Analysis** with clinical optimization and prosodic features.",
-    summary: "Audio Feature Engineering employs advanced **mel-frequency cepstral coefficients (MFCCs)** with clinical optimization, prosodic feature extraction, and voice quality metrics. This comprehensive approach enables precise measurement of emotional markers and temporal dynamics in clinical speech patterns.",
+    text: "**Spectral Analysis** with clinical optimization and prosodic features",
+    summary: "Audio Feature Engineering employs advanced **mel-frequency cepstral coefficients (MFCCs)** with clinical optimization, prosodic feature extraction, and voice quality metrics. This comprehensive approach enables precise measurement of emotional markers and temporal dynamics in clinical speech patterns",
     factors: [
       "Spectral Analysis: Advanced mel-frequency cepstral coefficients (MFCCs) with clinical optimization",
       "Prosodic Features: F0 contour analysis, energy distribution mapping, and speaking rate variability assessment",
@@ -31,8 +31,8 @@ const CARDS = [
   },
   { 
     title: "Visual Feature Processing", 
-    text: "**3D Facial Geometry** reconstruction with FACS-based expression analysis.",
-    summary: "Visual Feature Processing utilizes **3D facial geometry reconstruction** using **68-point landmark detection** with sub-pixel accuracy and real-time processing capabilities. The system incorporates FACS-based expression quantification and advanced gaze pattern analysis for comprehensive behavioral assessment.",
+    text: "**3D Facial Geometry** reconstruction with FACS-based expression analysis",
+    summary: "Visual Feature Processing utilizes **3D facial geometry reconstruction** using **68-point landmark detection** with sub-pixel accuracy and real-time processing capabilities. The system incorporates FACS-based expression quantification and advanced gaze pattern analysis for comprehensive behavioral assessment",
     factors: [
       "Facial Landmark Tracking: 3D facial geometry reconstruction using 68-point landmark detection with sub-pixel accuracy and real-time processing capabilities",
       "Action Unit Detection: FACS-based expression quantification with automated intensity measurement",
@@ -49,8 +49,8 @@ const CARDS = [
   },
   { 
     title: "Linguistic Feature Extraction", 
-    text: "**Semantic Analysis** with clinical domain specialization and pragmatic markers.",
-    summary: "Linguistic Feature Extraction employs **advanced word embedding** and concept mapping with clinical domain specialization. The system performs syntactic pattern analysis, pragmatic marker identification, and cognitive load indicator detection for comprehensive language assessment.",
+    text: "**Semantic Analysis** with clinical domain specialization and pragmatic markers",
+    summary: "Linguistic Feature Extraction employs **advanced word embedding** and concept mapping with clinical domain specialization. The system performs syntactic pattern analysis, pragmatic marker identification, and cognitive load indicator detection for comprehensive language assessment",
     factors: [
       "Semantic Analysis: Advanced word embedding and concept mapping with clinical domain specialization",
       "Syntactic Patterns: Sentence complexity analysis, grammatical structure assessment, and linguistic coherence measurement",

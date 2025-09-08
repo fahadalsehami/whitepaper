@@ -59,7 +59,7 @@ export default function SectionNavigation({ scrollToSection }: SectionNavigation
             console.log('🔧 Navigation - Forcing 5.1 display for chapter 5');
           }
           // Sizing
-          const size = 90;
+          const size = 45;
           const opacity = isActive ? 1 : 0.15;
           return (
             <div key={chapter.number} style={{ position: 'relative', marginBottom: '8px', width: '100%' }}>
@@ -71,7 +71,7 @@ export default function SectionNavigation({ scrollToSection }: SectionNavigation
                   position: 'relative',
                   zIndex: 2,
                   width: '100%',
-                  height: '100px',
+                  height: '50px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

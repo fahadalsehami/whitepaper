@@ -153,7 +153,7 @@ export default function HeroSection() {
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: isMobile ? '80px' : '100px',
+    paddingTop: isMobile ? '40px' : '60px',
     paddingBottom: isMobile ? '40px' : '0px',
     paddingLeft: isMobile ? '16px' : '0px',
     paddingRight: isMobile ? '16px' : '0px',
@@ -170,6 +170,41 @@ export default function HeroSection() {
           opacity: 0 !important;
         }
         ` : ''}
+        
+        /* Scroll indicator animations */
+        @keyframes scrollDot {
+          0% {
+            cy: 8;
+            opacity: 1;
+          }
+          50% {
+            cy: 25;
+            opacity: 0.5;
+          }
+          100% {
+            cy: 8;
+            opacity: 1;
+          }
+        }
+        
+        @keyframes scrollBounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+        
+        /* Hover effect for scroll indicator */
+        .scroll-indicator:hover {
+          opacity: 1 !important;
+          transform: translateX(-50%) scale(1.1);
+        }
+        
+        .scroll-indicator:hover span {
+          opacity: 1 !important;
+        }
       `}</style>
       
       <div
@@ -276,6 +311,92 @@ export default function HeroSection() {
             <span>LAST UPDATED August 2025</span>
           </div>
         </div>
+      </div>
+      
+      {/* Animated Scroll Indicator */}
+      <div 
+        className="scroll-indicator"
+        style={{
+          position: 'absolute',
+          bottom: isMobile ? '20px' : '40px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 15,
+          animation: 'scrollBounce 3s ease-in-out infinite',
+          cursor: 'pointer',
+          opacity: 0.8,
+          transition: 'all 0.3s ease',
+        }}
+        onClick={() => {
+          // Smooth scroll to next section
+          const nextSection = document.getElementById('intro-1');
+          if (nextSection) {
+            nextSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        {/* Scroll Text */}
+        <span style={{
+          fontSize: isMobile ? '10px' : '12px',
+          fontWeight: 500,
+          color: darkMode ? '#ffffff' : '#000000',
+          opacity: 0.7,
+          transition: isMobile ? 'none' : 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+          fontFamily: 'monospace',
+        }}>
+          SCROLL
+        </span>
+        
+        {/* Animated Arrow SVG */}
+        <svg 
+          width={isMobile ? "16" : "20"} 
+          height={isMobile ? "40" : "50"} 
+          viewBox="0 0 20 50" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+          style={{
+            color: darkMode ? '#ffffff' : '#000000',
+            transition: isMobile ? 'none' : 'color 0.7s cubic-bezier(0.4,0,0.2,1)',
+          }}
+        >
+          {/* Animated dot that moves down */}
+          <circle 
+            cx="10" 
+            cy="8" 
+            r="2" 
+            fill="currentColor"
+            style={{
+              animation: 'scrollDot 2s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Arrow path */}
+          <path 
+            d="M10 30L10 45M5 40L10 45L15 40" 
+            stroke="currentColor" 
+            strokeWidth="1.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            fill="none"
+          />
+          
+          {/* Vertical line */}
+          <line 
+            x1="10" 
+            y1="15" 
+            x2="10" 
+            y2="35" 
+            stroke="currentColor" 
+            strokeWidth="1" 
+            strokeOpacity="0.5"
+          />
+        </svg>
       </div>
     </div>
     </>

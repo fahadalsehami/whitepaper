@@ -7,12 +7,12 @@ import { getMobileCardStyle, getMobileTypography, getMobileSectionStyle } from '
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SUPPORT_TEXT = "Benchmark Performance Analysis demonstrates the superior capabilities of our multi-modal AI system across comprehensive clinical validation studies. Our system achieves exceptional performance with F1 Score: 0.87, AUC-ROC: 0.92, and Crisis Detection: 0.96, significantly outperforming traditional baseline methods and establishing new standards for clinical AI assessment accuracy.";
+const SUPPORT_TEXT = "Benchmark Performance Analysis demonstrates the superior capabilities of our multi-modal AI system across comprehensive clinical validation studies. Our system achieves exceptional performance with F1 Score: 0.87, AUC-ROC: 0.92, and Crisis Detection: 0.96, significantly outperforming traditional baseline methods and establishing new standards for clinical AI assessment accuracy";
 
 // Left grid cards and their corresponding comparison table data - Light theme version
 const GRID_DATA = {
-  "DAIC-WOZ Depression Detection": {
-    summary: "Our system achieved exceptional performance on the DAIC-WOZ Depression Detection Benchmark with superior accuracy across all key metrics, establishing new standards for automated depression screening.",
+  "Proprietary Depression Detection": {
+    summary: "Our system achieved exceptional performance on our proprietary Depression Detection Benchmark with superior accuracy across all key metrics, establishing new standards for automated depression screening",
     tableHeaders: ["Metric", "Our System", "Baseline Range", "Improvement"],
     tableData: [
       { name: "F1 Score", metric: "0.87", baseline: "0.75-0.82", improvement: "+8-12%", isOurSystem: true },
@@ -24,7 +24,7 @@ const GRID_DATA = {
     ]
   },
   "Clinical Validation Study": {
-    summary: "Clinical validation demonstrates superior performance across all assessment areas with exceptional crisis detection capabilities and cultural sensitivity improvements over current clinical standards.",
+    summary: "Clinical validation demonstrates superior performance across all assessment areas with exceptional crisis detection capabilities and cultural sensitivity improvements over current clinical standards",
     tableHeaders: ["Assessment Area", "Our System", "Current Standard", "Improvement"],
     tableData: [
       { name: "Risk Assessment Accuracy", metric: "0.91", baseline: "0.80-0.85", improvement: "+7-14%", isOurSystem: true },
@@ -35,7 +35,7 @@ const GRID_DATA = {
     ]
   },
   "4-Tier Risk Classification": {
-    summary: "4-Tier Risk Classification system demonstrates exceptional performance across all risk levels with significant clinical impact including substantial reduction in emergency interventions and suicide prevention.",
+    summary: "4-Tier Risk Classification system demonstrates exceptional performance across all risk levels with significant clinical impact including substantial reduction in emergency interventions and suicide prevention",
     tableHeaders: ["Risk Level", "Our System", "Traditional", "Clinical Impact"],
     tableData: [
       { name: "Low Risk (< 0.3)", metric: "94%", baseline: "80%", improvement: "65% reduction in unnecessary interventions", isOurSystem: true },
@@ -45,7 +45,7 @@ const GRID_DATA = {
     ]
   },
   "Multi-Modal Performance": {
-    summary: "Multi-modal integration achieves superior performance over individual modalities, demonstrating the significant benefits of comprehensive data fusion in clinical assessment accuracy.",
+    summary: "Multi-modal integration achieves superior performance over individual modalities, demonstrating the significant benefits of comprehensive data fusion in clinical assessment accuracy",
     tableHeaders: ["Modality", "F1 Score", "Performance Type", "Integration Benefit"],
     tableData: [
       { name: "Full Multi-Modal Integration", metric: "0.87", baseline: "Best Single", improvement: "+5-10% over best single", isOurSystem: true },
@@ -67,8 +67,8 @@ export default function Subchapter4_1() {
   // Only show content when we transition to subchapter 4.1
   const isActive = currentSubchapter === '4.1';
 
-  // State for selected left grid item
-  const [selectedItem, setSelectedItem] = useState<string>("DAIC-WOZ Depression Detection");
+  // State for selected left grid item and scroll-based animation
+  const [selectedItem, setSelectedItem] = useState<string>("Proprietary Depression Detection");
 
   // Set light theme when this subchapter is active
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function Subchapter4_1() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // ScrollTrigger animation with pin - optimized for smooth transition
+  // Scroll-based card animation - every scroll attempt moves to next card
   useEffect(() => {
     if (!isActive || !sectionRef.current) return;
 
@@ -103,20 +103,45 @@ export default function Subchapter4_1() {
       return;
     }
 
-    // PIN SECTION DURING SCROLL - similar to subchapter 1.3
+    // Define the card progression order
+    const cardOrder = [
+      "Proprietary Depression Detection",
+      "Clinical Validation Study", 
+      "4-Tier Risk Classification",
+      "Multi-Modal Performance"
+    ];
+
+    // SCROLL-BASED CARD ANIMATION with pin
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=1000', // Optimized pin distance
+      end: '+=2000', // Extended distance for 4 cards
       pin: true,
-      // No scrub - allows natural scroll continuation
+      scrub: 1, // Smooth scrubbing for responsive animation
+      onUpdate: (self) => {
+        const progress = self.progress;
+        
+        // Calculate which card should be active based on scroll progress
+        // Each card gets 25% of the scroll (100% / 4 cards = 25%)
+        const cardIndex = Math.min(
+          Math.floor(progress * cardOrder.length), 
+          cardOrder.length - 1
+        );
+        
+        const newSelectedItem = cardOrder[cardIndex];
+        
+        // Only update if different to prevent unnecessary re-renders
+        if (newSelectedItem !== selectedItem) {
+          setSelectedItem(newSelectedItem);
+        }
+      }
     });
 
     return () => {
       scrollTrigger.kill();
     };
 
-  }, [isActive, isMobile]);
+  }, [isActive, selectedItem]);
 
   // Responsive styles - Light theme
   const sectionStyle: React.CSSProperties = isMobile
